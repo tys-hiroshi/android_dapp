@@ -1,4 +1,4 @@
-package com.example.emptyapp
+package com.hblockth.dapp
 
 import android.app.AlertDialog
 import android.content.ClipData

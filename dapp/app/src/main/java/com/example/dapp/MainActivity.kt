@@ -1,4 +1,4 @@
-package com.example.emptyapp
+package com.hblockth.dapp
 //package jp.co.casareal.fuel
 
 import android.content.Intent
@@ -14,7 +14,7 @@ import com.github.kittinunf.result.Result
 import com.github.kittinunf.fuel.gson.responseObject
 
 class MainActivity : AppCompatActivity() {
-    val EXTRA_MESSAGE: String = "com.example.emptyapp.MESSAGE"
+    val EXTRA_MESSAGE: String = "com.hblockth.dapp.MESSAGE"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

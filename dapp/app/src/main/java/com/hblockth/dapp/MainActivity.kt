@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val address: String = "mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"
+        getbalance(address)
         setContentView(R.layout.activity_main)
     }
 
@@ -37,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         //val result = getText("https://bsvnodeapi.herokuapp.com/generateaddress/test")
         //mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy
         //println(result)
-        getbalance(address)
         //intent.putExtra(EXTRA_MESSAGE, message)
         //startActivity(intent)
     }

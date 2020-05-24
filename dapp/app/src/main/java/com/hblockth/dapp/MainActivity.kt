@@ -1,17 +1,21 @@
 package com.hblockth.dapp
 //package jp.co.casareal.fuel
 
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
+import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.json.responseJson
 import com.github.kittinunf.result.Result
 import com.github.kittinunf.fuel.gson.responseObject
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     val EXTRA_MESSAGE: String = "com.hblockth.dapp.MESSAGE"
@@ -25,71 +29,69 @@ class MainActivity : AppCompatActivity() {
         val intent: Intent = Intent(this@MainActivity,
             DisplayMessageActivity::class.java)
         val editText: EditText = findViewById(R.id.editText) as EditText
-        val message: String = editText.text.toString()
+        val address: String = "mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"  //editText.text.toString()
         val args: Array<String> = arrayOf("green", "red", "blue")
         //val generateAddress : GenerateAddress? = main(args)
         //println("generateAddress:${generateAddress?.address}")
         //val result = getText("https://bsvnodeapi.herokuapp.com/generateaddress/test")
+        //mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy
         //println(result)
-        intent.putExtra(EXTRA_MESSAGE, message)
-        startActivity(intent)
+        getbalance(address)
+        //intent.putExtra(EXTRA_MESSAGE, message)
+        //startActivity(intent)
     }
 
-//    fun getText(url: String): String {
-//        val (_, _, result) = url.httpGet().responseString()
-//
-//        return when (result) {
-//            is Result.Failure -> {
-//                println("failed")
-//                val ex = result.getException()
-//                println(ex.toString())
-//                ex.toString()
-//            }
-//            is Result.Success -> {
-//                result.get()
-//            }
-//        }
-//    }
-
-//    //https://www.yuulinux.tokyo/15220/
-//    data class GenerateAddress (
-//        var address: String,
-//        var privatekey_wif: String
-//    )
+    //https://www.yuulinux.tokyo/15220/
+    data class GetBalance (
+        var confirmed: Int,
+        var unconfirmed: Int
+    )
     
-//    fun main(args: Array<String>) : GenerateAddress? {
-////        "https://www.yuulinux.tokyo/demo/bs-tender-server-mock/test.json".httpGet().responseObject<User> { req, res, result ->
-////            val(user,err) = result
-////            println("user:${user}")
-////        }
-//        val generateAddress: GenerateAddress = GenerateAddress("", "")
-//        val httpAsync = "https://bsvnodeapi.herokuapp.com/generateaddress/test"
-//            .httpGet()
-//            .responseObject<GenerateAddress> { request, response, result ->
-//                when (result) {
-//                    is Result.Failure -> {
-//                        //val ex = result.getException()
-//                        //println("failed request")
-//                        //println(ex)
-//                        //val(generateAddress,err) = result
-//                    }
-//                    is Result.Success -> {
-////                        val data = result.get()
-////                        val json = result.value.obj()
-////                        val results =json.get("results") as JSONArray
-////                        println("success request")
-////                        println(data)
-//                        val(generateAddress,err) = result
-//                        println("aaaagenerateaddress:${generateAddress}")
-//                        generateAddress
-//                    }
-//                }
-//            }
-//
-//        //httpAsync.join()
-//        println(generateAddress.address)
-//        return null//httpAsync
-//    }
+    fun getbalance(address: String) : GetBalance? {
+        val generateAddress: GetBalance = GetBalance(0, 0)
+        val httpAsync = "https://bnoteapi.herokuapp.com/v1/api/getbalance/${address}"
+            .httpGet()
+            .header(hashMapOf("x-api-key" to "apikey"))
+            .responseObject<GetBalance> { request, response, result ->
+                when (result) {
+                    is Result.Failure -> {
+                        AlertDialog.Builder(this) // FragmentではActivityを取得して生成
+                            .setTitle("通信中にエラーが発生しました")
+                            .setMessage("戻ってやり直してください。")
+                            .setPositiveButton("OK", { dialog, which ->
+                                // TODO:Yesが押された時の挙動
+                                dialog.cancel()
+                            })
+                            .show()
+                    }
+                    is Result.Success -> {
+                        val(getbalance,err) = result
+                        println("getbalance:${getbalance}")
+                        var bsvAmountSatoshi: Int? = getbalance?.confirmed
+                        if(bsvAmountSatoshi == null){
+                            bsvAmountSatoshi = 0
+                        }
+                        println(bsvAmountSatoshi)
+
+//                        val edittextViewBsvAmount: EditText = findViewById(R.id.editTextAddress) as EditText
+//                        edittextViewBsvAmount.setText(bsvAmount.toString())
+                        var bsvAmountSatoshiDouble : Double = bsvAmountSatoshi.toDouble()
+                        var satoshiUnit: Double = 100000000.toDouble()
+                        val textViewBsvAmount: TextView = findViewById(R.id.textViewBsvAmount)
+                        var bsvAmount: Double? = (bsvAmountSatoshiDouble / satoshiUnit).toDouble()
+                        println(bsvAmount)
+                        var bsvAmountStr: String = bsvAmount.toString()
+                        println(bsvAmountStr)
+                        textViewBsvAmount.setText(bsvAmountStr)
+                        //textViewBsvAmount.setText(bsvAmount)
+                    }
+                }
+            }
+
+        //httpAsync.join()
+        //println(getbalance?.confirmed)
+        return null//httpAsync
+    }
 
 //    fun main(args: Array<String>) {
 //

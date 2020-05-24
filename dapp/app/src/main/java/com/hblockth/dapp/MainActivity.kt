@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     val EXTRA_MESSAGE: String = "com.hblockth.dapp.MESSAGE"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val address: String = "mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"
         setContentView(R.layout.activity_main)
     }
 

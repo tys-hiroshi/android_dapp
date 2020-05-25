@@ -7,10 +7,9 @@
     tools:context=".AddressListActivity">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RecyclerViewAddressList"
         android:layout_width="409dp"
         android:layout_height="729dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

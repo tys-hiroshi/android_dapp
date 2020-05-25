@@ -44,4 +44,9 @@ dependencies {
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.google.android.material:material:1.1.0'
 //https://qiita.com/Yu-shun/items/9ad83d7220800a7735e2
+    //https://developer.android.com/guide/topics/ui/layout/recyclerview?hl=ja
+    //https://developer.android.com/jetpack/androidx/releases/recyclerview?hl=ja
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    // For control over item selection of both touch and mouse driven selection
+    implementation "androidx.recyclerview:recyclerview-selection:1.1.0-rc01"
 }

@@ -11,8 +11,8 @@ interface AddressManageDao {
     @Query("SELECT * FROM addresses WHERE address = :address LIMIT 1")
     fun findByAddress(address: String): AddressModel
 
-    @Insert
-    fun insertAll(vararg addresses: MutableList<AddressModel>)
+//    @Insert
+//    fun insertAll(vararg addresses: MutableList<AddressModel>)
 
     @Insert
     fun insert(vararg addresses: AddressModel)

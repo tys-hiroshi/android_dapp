@@ -14,21 +14,17 @@ class AddressViewAdapter(private val context: Context, private val addressList: 
     RecyclerView.Adapter<AddressViewAdapter.AddressViewHolder>() {
 
     class AddressViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-//        val userIconImageView: ImageView = view.findViewById(R.id.userIcon)
-//        val userNameTextView: TextView = view.findViewById(R.id.userName)
-//        val dateTextView: TextView = view.findViewById(R.id.date)
-//        val contentTextView: TextView = view.findViewById(R.id.add)
+        val dateTextView: TextView = view.findViewById(R.id.date)
+        val addressTextView: TextView = view.findViewById(R.id.address)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressViewHolder =
-        AddressViewHolder(LayoutInflater.from(context).inflate(R.layout.activity_address_list, parent, false))
+        AddressViewHolder(LayoutInflater.from(context).inflate(R.layout.list_address, parent, false))
 
-    override fun getItemCount(): Int = memoList.size
+    override fun getItemCount(): Int = addressList.size
 
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
-        holder.userIconImageView.setImageResource(R.mipmap.ic_launcher)
-        holder.userNameTextView.text = "fu_neko"
-        holder.dateTextView.text = memoList[position].date
-        holder.contentTextView.text = memoList[position].content
+        holder.dateTextView.text = addressList[position].date
+        holder.addressTextView.text = addressList[position].address
     }
 }

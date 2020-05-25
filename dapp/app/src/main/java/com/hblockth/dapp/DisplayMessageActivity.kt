@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.room.Room
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.gson.jsonBody
@@ -20,6 +21,9 @@ import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
 import com.google.zxing.BarcodeFormat
+import com.hblockth.dapp.room.dao.addressmng.AddressManageDao
+import com.hblockth.dapp.room.db.AddressManageDatabase
+import com.hblockth.dapp.room.models.addressmng.AddressModel
 import com.journeyapps.barcodescanner.BarcodeEncoder
 
 class DisplayMessageActivity : AppCompatActivity() {
@@ -139,6 +143,15 @@ class DisplayMessageActivity : AppCompatActivity() {
                             textViewPrivateKeyWif.setText(generateAddress?.privatekey_wif)
                             var address:String? = generateAddress?.address
                             createQRCode(address)
+                            val db = Room.databaseBuilder(
+                                applicationContext,
+                                AddressManageDatabase::class.java, "database-dapp"
+                            ).build()
+                            val addressManageDao: AddressManageDao = db.addressManageDao()
+//                            var addressList : MutableList<AddressModel> = mutableListOf()
+//                            addressList.add(AddressModel(generateAddress?.address as String))
+
+                            addressManageDao.insert(AddressModel(generateAddress?.address as String))
                         }
                     }
             }

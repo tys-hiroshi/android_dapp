@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import com.github.kittinunf.fuel.core.FuelManager
+import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.gson.jsonBody
 import com.github.kittinunf.fuel.gson.responseObject
 import com.github.kittinunf.fuel.httpGet
@@ -97,7 +98,7 @@ class DisplayMessageActivity : AppCompatActivity() {
 ////                }
 ////            }
         // POSTによるHTTP通信
-        val bnotev1BaseUrl: String = "https://bnotev1.herokuapp.com/v1/"
+        val bnoteapiBaseUrl: String = "https://bnoteapi.herokuapp.com/v1"
         val api_mnemonic = "/api/mnemonic"
         //https://sendgrid.kke.co.jp/blog/?p=8471
         var content = """
@@ -105,8 +106,10 @@ class DisplayMessageActivity : AppCompatActivity() {
             "mnemonic": "${mnemonic}"
         }
         """
-        FuelManager.instance.baseHeaders = mapOf("Content-Type" to "application/json")
-        var httpPostAsync = "${bnotev1BaseUrl}${api_mnemonic}"
+        println(content)
+        FuelManager.instance.baseHeaders = mapOf("Content-Type" to "application/json", "x-api-key" to "aaa")
+        var url:String = "${bnoteapiBaseUrl}${api_mnemonic}"
+        var httpPostAsync = url
             .httpPost()
             .jsonBody(content)
             .responseObject<ResponseGenerateAddress> { request, response, result ->
@@ -130,8 +133,12 @@ class DisplayMessageActivity : AppCompatActivity() {
                             println("generateAddress:${generateAddress}")
 
                             val intent: Intent = getIntent()
-//                            val editTextAddress: EditText = findViewById(R.id.editTextAddress) as EditText
-//                            editTextAddress.setText(generateMnemonic?.mnemonic)
+                            val textViewAddress: TextView = findViewById(R.id.textViewAddress)
+                            textViewAddress.setText(generateAddress?.address)
+                            val textViewPrivateKeyWif: TextView = findViewById(R.id.textViewPrivateKeyWif)
+                            textViewPrivateKeyWif.setText(generateAddress?.privatekey_wif)
+                            var address:String? = generateAddress?.address
+                            createQRCode(address)
                         }
                     }
             }
@@ -143,7 +150,7 @@ class DisplayMessageActivity : AppCompatActivity() {
     )
 
     data class ResponseGenerateAddress (
-        var mnemonic: String,
+        var address: String,
         var balance_satoshi: Int,
         var code: Int,
         var privatekey_wif: String

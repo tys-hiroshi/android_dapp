@@ -15,9 +15,10 @@ class AddressListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_address_list)
         //テストデータの生成
+        //https://qiita.com/fu_neko/items/722e0ab5f0f1255f87bf
         val date = SimpleDateFormat("yyyy/MM/dd").format(Date())
         val addressList = mutableListOf<AddressModel>()
-        repeat((0..100).count()) { addressList.add(AddressModel("address0", date)) }
+        repeat((0..100).count()) { addressList.add(AddressModel("address", date)) }
 
         //RecyclerViewにAdapterとLayoutManagerを設定
         findViewById<RecyclerView>(R.id.addressRecyclerView).also { recyclerView: RecyclerView ->

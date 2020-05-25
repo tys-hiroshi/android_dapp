@@ -32,6 +32,12 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun viewAddressList(view: View) {
+        val intent: Intent = Intent(this@MainActivity,
+            AddressListActivity::class.java)
+        startActivity(intent)
+    }
+
     /* Sendボタン押下時 */
 //    fun sendMessage(view: View) {
 //        val intent: Intent = Intent(this@MainActivity,

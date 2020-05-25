@@ -33,6 +33,7 @@
         android:id="@+id/floatingActionButtonCreateAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/ic_launcher_background"
         android:clickable="true"
         android:onClick="createAddress"
         app:backgroundTint="@color/material_on_background_disabled"
@@ -43,5 +44,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.976"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+    <Button
+        android:id="@+id/buttonAddressList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="viewAddressList"
+        android:text="Address List"
+        tools:layout_editor_absoluteX="278dp"
+        tools:layout_editor_absoluteY="25dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

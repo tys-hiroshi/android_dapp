@@ -13,6 +13,8 @@ package com.hblockth.dapp.features.addressmng
 //import com.hblockth.dapp.network.api.OpenWeatherApi
 //import com.hblockth.dapp.network.response.ErrorResponse
 //import com.hblockth.dapp.room.dao.utils.StringKeyValueDao
+import com.github.kittinunf.result.Result
+import com.hblockth.dapp.features.home.di.HomeScope
 import com.hblockth.dapp.room.dao.addressmng.AddressManageDao
 import com.hblockth.dapp.utils.Utils
 import kotlinx.coroutines.flow.catch
@@ -61,48 +63,12 @@ class AddressManageRepository @Inject constructor(
      *  Then call this function callWeatherApi(cityName) from your View's lifecycleScope
      *
      */
-    fun callWeatherApi(cityName: String) = flow<WeatherResult> {
-        val lastTimestamp = stringKeyValueDao.get(Utils.LAST_WEATHER_API_CALL_TIMESTAMP)
-        if (lastTimestamp == null || Utils.shouldCallApi(
-                lastTimestamp.value,
-                weatherCacheThresholdMillis
-            )
-        ) {
-            openWeatherApi.getWeatherFromCityName(cityName)
-                .run {
-                    if (isSuccessful && body() != null) {
-                        stringKeyValueDao.insert(
-                            Utils.getCurrentTimeKeyValuePair(Utils.LAST_WEATHER_API_CALL_TIMESTAMP)
-                        )
-                        weatherDao.deleteAllAndInsert(WeatherMapper(body()!!).map())
-                    }
-                }
-        }
-    }.applyCommonSideEffects().catch { emit(Error(it)) }
-
-    private suspend fun getWeatherFromAPI(cityName: String) =
-        openWeatherApi.getWeatherFromCityName(cityName)
-            .run {
-                if (isSuccessful && body() != null) {
-                    stringKeyValueDao.insert(
-                        Utils.getCurrentTimeKeyValuePair(Utils.LAST_WEATHER_API_CALL_TIMESTAMP)
-                    )
-                    weatherDao.deleteAllAndInsert(WeatherMapper(body()!!).map())
-                    getDataOrError(NoDataException())
-                } else {
-                    Error(
-                        NoResponseException(
-                            ErrorHandler.parseError<ErrorResponse>(errorBody())?.message
-                        )
-                    )
-                }
-            }
 
     private suspend fun getDataOrError(throwable: Throwable) =
-        weatherDao.get()
-            ?.let { dbValue -> Success(dbValue) }
+        addressManageDao.getAll()
+            ?.let { dbValue -> Result.Success(dbValue) }
             ?: Error(throwable)
 
     //Observe DB changes
-    fun getWeatherDBFlow() = weatherDao.getFlow()
+    fun getAll() = addressManageDao.getAll()
 }

@@ -12,6 +12,9 @@ interface AddressManageDao {
     @Query("SELECT * FROM addresses")
     fun getAll(): List<AddressModel>
 
+    @Query("SELECT * FROM addresses ORDER BY address")
+    fun getAllBlocking(): List<AddressModel>
+
     @Query("SELECT * FROM addresses WHERE address = :address LIMIT 1")
     fun findByAddress(address: String): AddressModel
 

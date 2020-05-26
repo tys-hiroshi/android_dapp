@@ -1,13 +1,12 @@
 package com.hblockth.dapp
 
-import android.app.Application
 import androidx.room.Room
-import com.hblockth.dapp.room.db.AddressManageDatabase
+import com.hblockth.dapp.room.db.AppDatabase
 
 //https://qiita.com/sudachi808/items/d629e44fe8c1b9a26bb8
 class DApplication : android.app.Application() {
     companion object {
-        lateinit var db: AddressManageDatabase
+        lateinit var db: AppDatabase
     }
 
     override fun onCreate() {
@@ -15,7 +14,7 @@ class DApplication : android.app.Application() {
 
         db = Room.databaseBuilder(
             this,
-            objectOf<AddressManageDatabase>(), "database-dapp"
+            objectOf<AppDatabase>(), "database-dapp"
         ).build()
     }
 }

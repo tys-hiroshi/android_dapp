@@ -4,10 +4,10 @@ import android.app.Application
 //import androidx.databinding.ObservableField
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-//import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewModelScope
 import com.hblockth.dapp.room.models.addressmng.AddressModel
 import com.hblockth.dapp.repositories.AddressRepository
-import com.hblockth.dapp.room.db.AddressManageDatabase
+import com.hblockth.dapp.room.db.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -22,31 +22,29 @@ class AddressListViewModel (application: Application) : AndroidViewModel(applica
     var isInserting = false
 
     init {
-        repository = AddressRepository(AddressManageDatabase.getMessageDao())
-        messages = repository.findAll()
+        repository = AddressRepository(AppDatabase.getDatabase(application, viewModelScope).getAddressManageDao())
+        addresses = repository.findAllForLiveData()
     }
 
     fun loopingInsert() = viewModelScope.launch(Dispatchers.IO) {
         while (isInserting) {
-            val number = (messages.value?.size ?: 0) + 1L
-            val message = Message(
-                username = "Username $number",
-                message = generateRandomString(number),
-                time = Date()
+            val number = (addresses.value?.size ?: 0) + 1L
+            val address = AddressModel(
+                address = "address $number"
             )
-            repository.insert(message)
-            delay(400)
+            repository.insert(address)
+            delay(1000)
         }
     }
 
     fun toggleInsert() {
         isInserting = !isInserting
-        buttonText.set(
-            if (isInserting)
-                "Stop"
-            else
-                "Start"
-        )
+//        buttonText.set(
+//            if (isInserting)
+//                "Stop"
+//            else
+//                "Start"
+//        )
         if (isInserting)
             loopingInsert()
     }

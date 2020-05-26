@@ -8,9 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.hblockth.dapp.R
-import com.hblockth.dapp.model.AddressModel
+import com.hblockth.dapp.room.models.addressmng.AddressModel
+import androidx.databinding.DataBindingUtil
 
-class AddressViewAdapter(private val context: Context, private val addressList: List<AddressModel>) :
+class AddressViewAdapter(var addressList: List<AddressModel>) :
     RecyclerView.Adapter<AddressViewAdapter.AddressViewHolder>() {
 
     class AddressViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -19,12 +20,13 @@ class AddressViewAdapter(private val context: Context, private val addressList: 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressViewHolder =
-        AddressViewHolder(LayoutInflater.from(context).inflate(R.layout.list_address, parent, false))
+        AddressViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_address, parent, false))
+
 
     override fun getItemCount(): Int = addressList.size
 
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
-        holder.dateTextView.text = addressList[position].date
+        //holder.dateTextView.text = addressList[position].id
         holder.addressTextView.text = addressList[position].address
     }
 }

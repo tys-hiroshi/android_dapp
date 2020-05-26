@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hblockth.dapp.converters.Converters
 import com.hblockth.dapp.room.dao.addressmng.AddressManageDao
@@ -30,6 +31,12 @@ abstract class AppDatabase : RoomDatabase() {
         ): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 // Create database here
+                Room.databaseBuilder(context, AppDatabase::class.java, Utils.DATABASE_NAME)
+                    .addMigrations(object: Migration(1, 2){
+                        override fun migrate(database: SupportSQLiteDatabase) {
+                        }
+                    })
+                    .build();
                 val instance =
                     Room
                         .databaseBuilder(

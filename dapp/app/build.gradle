@@ -13,6 +13,7 @@ android {
     defaultConfig {
         applicationId "com.hblockth.dapp"
         minSdkVersion 19
+        multiDexEnabled true
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -60,10 +61,9 @@ dependencies {
 
     implementation "androidx.room:room-runtime:$room_version"
     //annotationProcessor "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
-    kapt "androidx.room:room-compiler:$room_version"
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$room_version"
-
+    kapt "androidx.room:room-compiler:$room_version"
     // optional - RxJava support for Room
     implementation "androidx.room:room-rxjava2:$room_version"
 
@@ -85,9 +85,4 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.archLifecycleVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"
-    kapt 'com.android.databinding:compiler:3.1.4'
-}
-
-kapt {
-    generateStubs = true
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hblockth.dapp.adapter.AddressViewAdapter
+import com.hblockth.dapp.databinding.ActivityAddressListBinding
 import com.hblockth.dapp.model.AddressModel
 import com.hblockth.dapp.room.dao.addressmng.AddressManageDao
 import com.hblockth.dapp.viewmodels.AddressListViewModel
@@ -16,7 +17,7 @@ import java.util.Date
 //import com.hblockth.dapp.databinding.ActivityAddressListBinding
 
 class AddressListActivity : AppCompatActivity() {
-    //private lateinit var mBinding: ActivityAddressListBinding
+    private lateinit var mBinding: ActivityAddressListBinding
     private lateinit var mViewModel: AddressListViewModel
     private lateinit var mAdapter: AddressViewAdapter
     private var hasScrolledSteep = false
@@ -45,12 +46,12 @@ class AddressListActivity : AppCompatActivity() {
 //            addressList.add(AddressModel(item.address, "2020/05/10"))
 //        }
 
-//        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_address_list)
-//        mBinding.viewModel = mViewModel
-//        mBinding.rvMessages.apply {
-//            adapter = mAdapter
-//            layoutManager = LinearLayoutManager(this@MainActivity)
-//        }
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_address_list)
+        mBinding.viewModel = mViewModel
+        mBinding.addressRecyclerView.apply {
+            adapter = mAdapter
+            layoutManager = LinearLayoutManager(this@AddressListActivity)
+        }
         mViewModel.addresses.observe(this, Observer { addressList ->
             mAdapter.addressList = addressList
             mAdapter.notifyDataSetChanged()

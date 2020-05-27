@@ -60,7 +60,7 @@ abstract class AppDatabase : RoomDatabase() {
             super.onOpen(db)
             INSTANCE?.let { database ->
                 scope.launch(Dispatchers.IO) {
-                    populateDatabase(database.getAddressManageDao())
+                    //populateDatabase(database.getAddressManageDao())
                 }
             }
         }
@@ -68,7 +68,7 @@ abstract class AppDatabase : RoomDatabase() {
         fun populateDatabase(dao: AddressManageDao) {
             if (dao.getAllBlocking().isEmpty()) {
                 val addresses = mutableListOf<AddressModel>()
-                for (i in 1..1000) {
+                for (i in 1..100) {
                     val address = AddressModel(
                         address = "address $i"
                     )

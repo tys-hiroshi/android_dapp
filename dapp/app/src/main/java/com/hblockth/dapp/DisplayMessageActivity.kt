@@ -12,6 +12,8 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.core.extensions.jsonBody
@@ -20,14 +22,19 @@ import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
 import com.google.zxing.BarcodeFormat
+import com.hblockth.dapp.repositories.AddressRepository
 import com.hblockth.dapp.room.dao.addressmng.AddressManageDao
 import com.hblockth.dapp.room.db.AppDatabase
 import com.hblockth.dapp.room.models.addressmng.AddressModel
+import com.hblockth.dapp.viewmodels.AddAddressViewModel
 import com.journeyapps.barcodescanner.BarcodeEncoder
 
 class DisplayMessageActivity : AppCompatActivity() {
 
+    private lateinit var mViewModel: AddAddressViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        mViewModel = ViewModelProviders.of(this).get(AddAddressViewModel::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display_message)
         generateMnemonic("test")
@@ -142,6 +149,8 @@ class DisplayMessageActivity : AppCompatActivity() {
                             textViewPrivateKeyWif.setText(generateAddress?.privatekey_wif)
                             var address:String? = generateAddress?.address
                             createQRCode(address)
+                            //TODO: insert address to db
+                            mViewModel.toggleInsert(address as String)
 //                            val db = Room.databaseBuilder(
 //                                applicationContext,
 //                                AppDatabase::class.java, "database-dapp"
@@ -203,5 +212,21 @@ class DisplayMessageActivity : AppCompatActivity() {
                     }
                 }
             }
+    }
+
+    /* Sendボタン押下時 */
+    fun changeAddress(view: View) {
+        val intent: Intent = Intent(this@DisplayMessageActivity,
+            DisplayMessageActivity::class.java)
+        val editText: EditText = findViewById(R.id.editText) as EditText
+        val address: String = "mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"  //editText.text.toString()
+        val args: Array<String> = arrayOf("green", "red", "blue")
+        //val generateAddress : GenerateAddress? = main(args)
+        //println("generateAddress:${generateAddress?.address}")
+        //val result = getText("https://bsvnodeapi.herokuapp.com/generateaddress/test")
+        //mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy
+        //println(result)
+        //intent.putExtra(EXTRA_MESSAGE, message)
+        //startActivity(intent)
     }
 }

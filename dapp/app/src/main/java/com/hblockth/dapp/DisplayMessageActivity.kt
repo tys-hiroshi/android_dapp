@@ -214,18 +214,4 @@ class DisplayMessageActivity : AppCompatActivity() {
                 }
             }
     }
-
-    /* Sendボタン押下時 */
-    fun changeAddress(view: View) {
-        val intent: Intent = Intent(this@DisplayMessageActivity,
-            MainActivity::class.java)
-        val addressText: TextView = findViewById(R.id.address)
-        //val generateAddress : GenerateAddress? = main(args)
-        //println("generateAddress:${generateAddress?.address}")
-        //val result = getText("https://bsvnodeapi.herokuapp.com/generateaddress/test")
-        //mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy
-        //println(result)
-        intent.putExtra(Utils.SELECTED_ADDRESS, addressText.text)
-        startActivity(intent)
-    }
 }

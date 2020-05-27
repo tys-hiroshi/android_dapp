@@ -1,7 +1,10 @@
 package com.hblockth.dapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -11,6 +14,7 @@ import com.hblockth.dapp.adapter.AddressViewAdapter
 import com.hblockth.dapp.databinding.ActivityAddressListBinding
 import com.hblockth.dapp.model.AddressModel
 import com.hblockth.dapp.room.dao.addressmng.AddressManageDao
+import com.hblockth.dapp.utils.Utils
 import com.hblockth.dapp.viewmodels.AddressListViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -63,5 +67,25 @@ class AddressListActivity : AppCompatActivity() {
 //            recyclerView.adapter = AddressViewAdapter(this, )
 //            recyclerView.layoutManager = LinearLayoutManager(this)
 //        }
+
+        // インターフェースの実装
+        mAdapter.setOnItemClickListener(object:AddressViewAdapter.OnItemClickListener{
+            override fun onItemClickListener(view: View, position: Int, clickedText: String) {
+                changeAddress(clickedText)
+            }
+        })
+    }
+
+    /* Sendボタン押下時 */
+    fun changeAddress(address: String) {
+        val intent: Intent = Intent(this@AddressListActivity,
+            MainActivity::class.java)
+        //val generateAddress : GenerateAddress? = main(args)
+        //println("generateAddress:${generateAddress?.address}")
+        //val result = getText("https://bsvnodeapi.herokuapp.com/generateaddress/test")
+        //mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy
+        //println(result)
+        intent.putExtra(Utils.SELECTED_ADDRESS, address)
+        startActivity(intent)
     }
 }

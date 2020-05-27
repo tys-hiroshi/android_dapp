@@ -24,8 +24,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // Activity開始時にIntentを取得し、文字列をセットする
         val intent: Intent = getIntent()
-        val address: String = intent.getStringExtra(Utils.SELECTED_ADDRESS)
-        //val address: String = "mnLKtTcMnmhchza8wPMLuk813j36sEpArK"  //"mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"
+        var address: String? = intent.getStringExtra(Utils.SELECTED_ADDRESS)
+        if(address == null){
+            address = "mnLKtTcMnmhchza8wPMLuk813j36sEpArK"  //"mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"
+        }
         getbalance(address)
         setContentView(R.layout.activity_main)
     }
@@ -85,13 +87,19 @@ class MainActivity : AppCompatActivity() {
                         val(getbalance,err) = result
                         println("getbalance:${getbalance}")
                         var bsvAmountSatoshi: Int? = getbalance?.confirmed
+                        var unconfirmedBsvAmountSatoshi: Int? = getbalance?.unconfirmed
                         if(bsvAmountSatoshi == null){
                             bsvAmountSatoshi = 0
                         }
+                        if(unconfirmedBsvAmountSatoshi == null){
+                            unconfirmedBsvAmountSatoshi = 0
+                        }
                         println(bsvAmountSatoshi)
+                        println(unconfirmedBsvAmountSatoshi)
 
 //                        val edittextViewBsvAmount: EditText = findViewById(R.id.editTextAddress) as EditText
 //                        edittextViewBsvAmount.setText(bsvAmount.toString())
+                        bsvAmountSatoshi += unconfirmedBsvAmountSatoshi
                         var bsvAmountSatoshiDouble : Double = bsvAmountSatoshi.toDouble()
                         var satoshiUnit: Double = 100000000.toDouble()
                         val textViewBsvAmount: TextView = findViewById(R.id.textViewBsvAmount)

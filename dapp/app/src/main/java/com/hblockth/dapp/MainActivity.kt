@@ -15,13 +15,17 @@ import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.json.responseJson
 import com.github.kittinunf.result.Result
 import com.github.kittinunf.fuel.gson.responseObject
+import com.hblockth.dapp.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     val EXTRA_MESSAGE: String = "com.hblockth.dapp.MESSAGE"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val address: String = "mnLKtTcMnmhchza8wPMLuk813j36sEpArK"  //"mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"
+        // Activity開始時にIntentを取得し、文字列をセットする
+        val intent: Intent = getIntent()
+        val address: String = intent.getStringExtra(Utils.SELECTED_ADDRESS)
+        //val address: String = "mnLKtTcMnmhchza8wPMLuk813j36sEpArK"  //"mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"
         getbalance(address)
         setContentView(R.layout.activity_main)
     }

@@ -26,6 +26,7 @@ import com.hblockth.dapp.repositories.AddressRepository
 import com.hblockth.dapp.room.dao.addressmng.AddressManageDao
 import com.hblockth.dapp.room.db.AppDatabase
 import com.hblockth.dapp.room.models.addressmng.AddressModel
+import com.hblockth.dapp.utils.Utils
 import com.hblockth.dapp.viewmodels.AddAddressViewModel
 import com.journeyapps.barcodescanner.BarcodeEncoder
 
@@ -217,16 +218,14 @@ class DisplayMessageActivity : AppCompatActivity() {
     /* Sendボタン押下時 */
     fun changeAddress(view: View) {
         val intent: Intent = Intent(this@DisplayMessageActivity,
-            DisplayMessageActivity::class.java)
-        val editText: EditText = findViewById(R.id.editText) as EditText
-        val address: String = "mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"  //editText.text.toString()
-        val args: Array<String> = arrayOf("green", "red", "blue")
+            MainActivity::class.java)
+        val addressText: TextView = findViewById(R.id.address)
         //val generateAddress : GenerateAddress? = main(args)
         //println("generateAddress:${generateAddress?.address}")
         //val result = getText("https://bsvnodeapi.herokuapp.com/generateaddress/test")
         //mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy
         //println(result)
-        //intent.putExtra(EXTRA_MESSAGE, message)
-        //startActivity(intent)
+        intent.putExtra(Utils.SELECTED_ADDRESS, addressText.text)
+        startActivity(intent)
     }
 }

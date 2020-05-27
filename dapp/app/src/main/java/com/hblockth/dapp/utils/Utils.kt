@@ -7,6 +7,7 @@ import java.util.*
 
 object Utils {
     const val DATABASE_NAME = "database-dapp"
+    const val SELECTED_ADDRESS = "com.hblockth.dapp.selected_address"
     const val MAX_RETRIES = 3L
     private const val INITIAL_BACKOFF = 2000L
 

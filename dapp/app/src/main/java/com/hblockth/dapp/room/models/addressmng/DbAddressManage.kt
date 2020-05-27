@@ -10,5 +10,7 @@ class DbAddressManage {
 @Entity(tableName = "addresses")
 data class AddressModel(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    var address: String
+    var address: String,
+    var privateKeyWif: String,
+    var mnemonic: String
 )

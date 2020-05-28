@@ -3,27 +3,23 @@ package com.hblockth.dapp
 
 import android.app.AlertDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-
-import com.github.kittinunf.fuel.httpGet
-import com.github.kittinunf.fuel.json.responseJson
-import com.github.kittinunf.result.Result
 import com.github.kittinunf.fuel.gson.responseObject
-import com.hblockth.dapp.room.models.addressmng.AddressModel
+import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.result.Result
+import com.hblockth.dapp.adapter.AddressViewAdapter
 import com.hblockth.dapp.utils.Utils
-import com.hblockth.dapp.viewmodels.AddressListViewModel
 import com.hblockth.dapp.viewmodels.AddressViewModel
-import kotlinx.android.synthetic.main.activity_display_message.*
-import kotlinx.android.synthetic.main.activity_main.*
+import com.hblockth.dapp.viewmodels.AddressViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mViewModel: AddressViewModel
-
+    private lateinit var mAdapter: AddressViewAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Activity開始時にIntentを取得し、文字列をセットする
@@ -51,18 +47,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun aaa(address: String?){
-        mViewModel =  ViewModelProviders.of(this).get(AddressViewModel::class.java)//ViewModelProvider.NewInstanceFactory().create(AddressViewModel::class.java)
+        mViewModel = ViewModelProviders.of(this, AddressViewModelFactory(this.application, address as String))
+            .get<AddressViewModel>(
+                AddressViewModel::class.java
+            )
+        print(mViewModel.addressModel)
+        mViewModel.addressModel.observe(this, Observer { addressInfo ->
+
+            println("address")
+            println(addressInfo)
+            if(addressInfo != null)
+            {
+                val textViewAddress: TextView = findViewById(R.id.textViewAddress)
+                textViewAddress.setText(addressInfo.address)
+                val textViewPrivateKeyWif: TextView = findViewById(R.id.textViewPrivateKeyWif)
+                textViewPrivateKeyWif.setText(addressInfo.privateKeyWif)
+                val MnemonicMultilineText: TextView = findViewById(R.id.MnemonicMultilineText)
+                MnemonicMultilineText.setText(addressInfo.mnemonic)
+            }
+        })
+        //mViewModel = ViewModelProviders.of(this, AddressViewModel.AddressViewModelFactory(application, address)).get(AddressViewModel::class.java)
+        //mViewModel =  ViewModelProviders.of(this).get(AddressViewModel::class.java)//ViewModelProvider.NewInstanceFactory().create(AddressViewModel::class.java)
 
 //        val addressInfo: AddressModel = mViewModel.getAddressSecretInfo(address as String)
-        mViewModel.getAddressSecretInfo(address as String)
+        //mViewModel.getAddressSecretInfo(address as String)
         //val addressInfo: AddressModel = mViewModel.addressModel
         //setText
-//        val textViewAddress: TextView = findViewById(R.id.textViewAddress)
-//        textViewAddress.setText(addressInfo.address)
-//        val textViewPrivateKeyWif: TextView = findViewById(R.id.textViewPrivateKeyWif)
-//        textViewPrivateKeyWif.setText(addressInfo.privateKeyWif)
-//        val MnemonicMultilineText: TextView = findViewById(R.id.MnemonicMultilineText)
-//        MnemonicMultilineText.setText(addressInfo.mnemonic)
     }
 
     /* Sendボタン押下時 */

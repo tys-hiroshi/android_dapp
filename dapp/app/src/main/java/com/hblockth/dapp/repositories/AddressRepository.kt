@@ -20,7 +20,8 @@ class AddressRepository(
 //    }
 
 
-    fun findByAddressForLiveData(address : String): LiveData<AddressModel> = addressManageDao.findByAddress(address)
+    fun findByAddressForLiveData(address : String): LiveData<AddressModel> = addressManageDao.findByAddressForLiveData(address)
+    fun findByAddress(address : String): AddressModel = addressManageDao.findByAddress(address)
 
     @WorkerThread
     suspend fun insert(vararg address: AddressModel) {

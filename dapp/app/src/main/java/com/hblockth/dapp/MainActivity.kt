@@ -2,6 +2,9 @@ package com.hblockth.dapp
 //package jp.co.casareal.fuel
 
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -58,12 +61,12 @@ class MainActivity : AppCompatActivity() {
             println(addressInfo)
             if(addressInfo != null)
             {
-                val textViewAddress: TextView = findViewById(R.id.textViewAddress)
-                textViewAddress.setText(addressInfo.address)
-                val textViewPrivateKeyWif: TextView = findViewById(R.id.textViewPrivateKeyWif)
-                textViewPrivateKeyWif.setText(addressInfo.privateKeyWif)
-                val MnemonicMultilineText: TextView = findViewById(R.id.MnemonicMultilineText)
-                MnemonicMultilineText.setText(addressInfo.mnemonic)
+                val addressTextView: TextView = findViewById(R.id.AddressTextView)
+                addressTextView.setText(addressInfo.address)
+                val privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifTextView)
+                privateKeyWifTextView.setText(addressInfo.privateKeyWif)
+                val mnemonicMultilineText: TextView = findViewById(R.id.MnemonicMultilineText)
+                mnemonicMultilineText.setText(addressInfo.mnemonic)
             }
         })
         //mViewModel = ViewModelProviders.of(this, AddressViewModel.AddressViewModelFactory(application, address)).get(AddressViewModel::class.java)
@@ -147,6 +150,33 @@ class MainActivity : AppCompatActivity() {
         //httpAsync.join()
         //println(getbalance?.confirmed)
         return null//httpAsync
+    }
+
+    /* Copyボタン押下時 */
+    fun copyClipboardAddress(view: View) {
+        //クリップボードのサービスのインスタンスを取得する
+        var mManager: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        var addressTextView: TextView = findViewById(R.id.AddressTextView) as TextView
+        var clip: ClipData = ClipData.newPlainText("", addressTextView.text)
+        mManager.setPrimaryClip(clip)
+    }
+
+    /* Copyボタン押下時 */
+    fun copyClipboardPrivateKeyWif(view: View) {
+        //クリップボードのサービスのインスタンスを取得する
+        var mManager: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        var privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifTextView) as TextView
+        var clip: ClipData = ClipData.newPlainText("", privateKeyWifTextView.text)
+        mManager.setPrimaryClip(clip)
+    }
+
+    /* Copyボタン押下時 */
+    fun copyClipboardMnemonic(view: View) {
+        //クリップボードのサービスのインスタンスを取得する
+        var mManager: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        var mnemonicMultilineText: TextView = findViewById(R.id.MnemonicMultilineText) as TextView
+        var clip: ClipData = ClipData.newPlainText("", mnemonicMultilineText.text)
+        mManager.setPrimaryClip(clip)
     }
 
 //    fun main(args: Array<String>) {

@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
@@ -35,7 +36,9 @@ class DisplayMessageActivity : AppCompatActivity() {
     private lateinit var mViewModel: AddAddressViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //TODO: ViewModelProviders is deprecated. https://qiita.com/sudo5in5k/items/1d70ec65fd264eed5f7c
         mViewModel = ViewModelProviders.of(this).get(AddAddressViewModel::class.java)
+        //mViewModel =  ViewModelProvider.NewInstanceFactory().create(AddAddressViewModel::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display_message)
         generateMnemonic("test")
@@ -150,7 +153,7 @@ class DisplayMessageActivity : AppCompatActivity() {
                             var address:String? = generateAddress?.address
                             createQRCode(address)
                             val privateKeyWif: String? = generateAddress?.privatekey_wif
-                            //TODO: insert address to db
+                            //NOTE: insert address to db
                             mViewModel.newAddressInsert(address as String, privateKeyWif as String, mnemonic as String)
 //                            val db = Room.databaseBuilder(
 //                                applicationContext,

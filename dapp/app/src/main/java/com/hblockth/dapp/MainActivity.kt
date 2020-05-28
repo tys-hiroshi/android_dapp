@@ -6,29 +6,35 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
 import android.widget.TextView
-import com.github.kittinunf.fuel.core.FuelManager
-import com.github.kittinunf.fuel.core.ResponseDeserializable
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.json.responseJson
 import com.github.kittinunf.result.Result
 import com.github.kittinunf.fuel.gson.responseObject
+import com.hblockth.dapp.room.models.addressmng.AddressModel
 import com.hblockth.dapp.utils.Utils
+import com.hblockth.dapp.viewmodels.AddressListViewModel
+import com.hblockth.dapp.viewmodels.AddressViewModel
+import kotlinx.android.synthetic.main.activity_display_message.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-    val EXTRA_MESSAGE: String = "com.hblockth.dapp.MESSAGE"
+    private lateinit var mViewModel: AddressViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Activity開始時にIntentを取得し、文字列をセットする
         val intent: Intent = getIntent()
         var address: String? = intent.getStringExtra(Utils.SELECTED_ADDRESS)
         if(address == null){
-            address = "mnLKtTcMnmhchza8wPMLuk813j36sEpArK"  //"mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"
+            address = "mg8atoeAz2b9dVjm6n6sACCjRb6fMc6kgs"  //"mnLKtTcMnmhchza8wPMLuk813j36sEpArK"  //"mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"
         }
         getbalance(address)
+        aaa(address)
+
         setContentView(R.layout.activity_main)
     }
 
@@ -42,6 +48,21 @@ class MainActivity : AppCompatActivity() {
         val intent: Intent = Intent(this@MainActivity,
             AddressListActivity::class.java)
         startActivity(intent)
+    }
+
+    fun aaa(address: String?){
+        mViewModel =  ViewModelProviders.of(this).get(AddressViewModel::class.java)//ViewModelProvider.NewInstanceFactory().create(AddressViewModel::class.java)
+
+//        val addressInfo: AddressModel = mViewModel.getAddressSecretInfo(address as String)
+        mViewModel.getAddressSecretInfo(address as String)
+        //val addressInfo: AddressModel = mViewModel.addressModel
+        //setText
+//        val textViewAddress: TextView = findViewById(R.id.textViewAddress)
+//        textViewAddress.setText(addressInfo.address)
+//        val textViewPrivateKeyWif: TextView = findViewById(R.id.textViewPrivateKeyWif)
+//        textViewPrivateKeyWif.setText(addressInfo.privateKeyWif)
+//        val MnemonicMultilineText: TextView = findViewById(R.id.MnemonicMultilineText)
+//        MnemonicMultilineText.setText(addressInfo.mnemonic)
     }
 
     /* Sendボタン押下時 */
@@ -77,10 +98,10 @@ class MainActivity : AppCompatActivity() {
                         AlertDialog.Builder(this) // FragmentではActivityを取得して生成
                             .setTitle("通信中にエラーが発生しました")
                             .setMessage("戻ってやり直してください。")
-                            .setPositiveButton("OK", { dialog, which ->
+                            .setPositiveButton("OK") { dialog, which ->
                                 // TODO:Yesが押された時の挙動
                                 dialog.cancel()
-                            })
+                            }
                             .show()
                     }
                     is Result.Success -> {

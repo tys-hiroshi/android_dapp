@@ -14,6 +14,14 @@ class AddressRepository(
 
     fun findAll(): List<AddressModel> = addressManageDao.getAll()
 
+//    @WorkerThread
+//    suspend fun findByAddress(address: String): LiveData<AddressModel> {
+//        return addressManageDao.findByAddress(address)
+//    }
+
+
+    fun findByAddressForLiveData(address : String): LiveData<AddressModel> = addressManageDao.findByAddress(address)
+
     @WorkerThread
     suspend fun insert(vararg address: AddressModel) {
         addressManageDao.insert(*address)

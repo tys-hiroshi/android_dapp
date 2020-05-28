@@ -16,7 +16,7 @@ interface AddressManageDao {
     fun getAllBlocking(): List<AddressModel>
 
     @Query("SELECT * FROM addresses WHERE address = :address LIMIT 1")
-    fun findByAddress(address: String): AddressModel
+    fun findByAddress(address: String): LiveData<AddressModel>
 
 //    @Insert
 //    fun insertAll(vararg addresses: MutableList<AddressModel>)

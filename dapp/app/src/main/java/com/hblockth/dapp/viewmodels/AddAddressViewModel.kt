@@ -23,22 +23,17 @@ class AddAddressViewModel (application: Application) : AndroidViewModel(applicat
         repository = AddressRepository(AppDatabase.getDatabase(application, viewModelScope).getAddressManageDao())
     }
 
-    fun addAddress(addressStr: String) = viewModelScope.launch(Dispatchers.IO) {
+    //DBへレコード追加
+    fun addAddress(addressStr: String, privateKeyWifStr: String, mnemonicStr: String) = viewModelScope.launch(Dispatchers.IO) {
         var addressModel = AddressModel(
-            address = addressStr
+            address = addressStr,
+            privateKeyWif = privateKeyWifStr,
+            mnemonic = mnemonicStr
         )
         repository.insert(addressModel)
     }
 
-    fun toggleInsert(addressStr: String) {
-        isInserting = !isInserting
-//        buttonText.set(
-//            if (isInserting)
-//                "Stop"
-//            else
-//                "Start"
-//        )
-        if (isInserting)
-            addAddress(addressStr)
+    fun newAddressInsert(addressStr: String, privateKeyWifStr: String, mnemonicStr: String) {
+        addAddress(addressStr, privateKeyWifStr, mnemonicStr)
     }
 }

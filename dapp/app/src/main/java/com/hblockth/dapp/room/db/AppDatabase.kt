@@ -65,17 +65,17 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        fun populateDatabase(dao: AddressManageDao) {
-            if (dao.getAllBlocking().isEmpty()) {
-                val addresses = mutableListOf<AddressModel>()
-                for (i in 1..100) {
-                    val address = AddressModel(
-                        address = "address $i"
-                    )
-                    addresses.add(address)
-                }
-                dao.insert(*addresses.toTypedArray())
-            }
-        }
+//        fun populateDatabase(dao: AddressManageDao) {
+//            if (dao.getAllBlocking().isEmpty()) {
+//                val addresses = mutableListOf<AddressModel>()
+//                for (i in 1..100) {
+//                    val address = AddressModel(
+//                        address = "address $i"
+//                    )
+//                    addresses.add(address)
+//                }
+//                dao.insert(*addresses.toTypedArray())
+//            }
+//        }
     }
 }

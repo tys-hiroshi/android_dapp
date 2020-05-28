@@ -143,15 +143,15 @@ class DisplayMessageActivity : AppCompatActivity() {
                             val(generateAddress, err) = result
                             println("generateAddress:${generateAddress}")
 
-                            val intent: Intent = getIntent()
                             val textViewAddress: TextView = findViewById(R.id.textViewAddress)
                             textViewAddress.setText(generateAddress?.address)
                             val textViewPrivateKeyWif: TextView = findViewById(R.id.textViewPrivateKeyWif)
                             textViewPrivateKeyWif.setText(generateAddress?.privatekey_wif)
                             var address:String? = generateAddress?.address
                             createQRCode(address)
+                            val privateKeyWif: String? = generateAddress?.privatekey_wif
                             //TODO: insert address to db
-                            mViewModel.toggleInsert(address as String)
+                            mViewModel.newAddressInsert(address as String, privateKeyWif as String, mnemonic as String)
 //                            val db = Room.databaseBuilder(
 //                                applicationContext,
 //                                AppDatabase::class.java, "database-dapp"

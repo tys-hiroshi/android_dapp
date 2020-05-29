@@ -37,8 +37,8 @@ class DisplayMessageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //TODO: ViewModelProviders is deprecated. https://qiita.com/sudo5in5k/items/1d70ec65fd264eed5f7c
-        mViewModel = ViewModelProviders.of(this).get(AddAddressViewModel::class.java)
-        //mViewModel =  ViewModelProvider.NewInstanceFactory().create(AddAddressViewModel::class.java)
+        //mViewModel = ViewModelProviders.of(this).get(AddAddressViewModel::class.java)
+        mViewModel =  ViewModelProvider.NewInstanceFactory().create(AddAddressViewModel::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display_message)
         generateMnemonic("test")
@@ -155,6 +155,7 @@ class DisplayMessageActivity : AppCompatActivity() {
                             val privateKeyWif: String? = generateAddress?.privatekey_wif
                             //NOTE: insert address to db
                             mViewModel.newAddressInsert(address as String, privateKeyWif as String, mnemonic as String)
+                            //TODO: mViewModel.newAddressInsert(address as String, privateKeyWif as String, mnemonic as String)
 //                            val db = Room.databaseBuilder(
 //                                applicationContext,
 //                                AppDatabase::class.java, "database-dapp"

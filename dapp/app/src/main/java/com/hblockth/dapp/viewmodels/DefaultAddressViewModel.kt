@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class DefaultAddressViewModel(application: Application) : AndroidViewModel(application) {
-    val addressModel: LiveData<AddressModel>
+    val addressModel: LiveData<DbAddressManage.DefaultAddressModel>
     val repository: AddressRepository
 
     init {
@@ -30,8 +30,8 @@ class DefaultAddressViewModel(application: Application) : AndroidViewModel(appli
         repository.insert(defaultAddressModel)
     }
 
-    fun newAddressInsert(addressStr: String, privateKeyWifStr: String, mnemonicStr: String) {
-        addDefaultAddress(addressStr, privateKeyWifStr, mnemonicStr)
+    fun newAddressInsert(addressStr: String) {
+        addDefaultAddress(addressStr)
     }
 
 }

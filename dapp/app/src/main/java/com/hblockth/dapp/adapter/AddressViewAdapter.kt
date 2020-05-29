@@ -17,7 +17,6 @@ class AddressViewAdapter(var addressList: List<AddressModel>) :
     // リスナー格納変数
     lateinit var listener: OnItemClickListener
 
-
     class AddressViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val dateTextView: TextView = view.findViewById(R.id.date)
         val addressTextView: TextView = view.findViewById(R.id.address)

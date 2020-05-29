@@ -25,12 +25,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAdapter: AddressViewAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //TODO: Get default address info
+        val address: String = getDefaultAddressInfo()
         // Activity開始時にIntentを取得し、文字列をセットする
-        val intent: Intent = getIntent()
-        var address: String? = intent.getStringExtra(Utils.SELECTED_ADDRESS)
-        if(address == null){
-            address = "mg8atoeAz2b9dVjm6n6sACCjRb6fMc6kgs"  //"mnLKtTcMnmhchza8wPMLuk813j36sEpArK"  //"mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"
-        }
+//        val intent: Intent = getIntent()
+//        var address: String? = intent.getStringExtra(Utils.SELECTED_ADDRESS)
+//        if(address == null){
+//            address = "mg8atoeAz2b9dVjm6n6sACCjRb6fMc6kgs"  //"mnLKtTcMnmhchza8wPMLuk813j36sEpArK"  //"mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"
+//        }
         getbalance(address)
         setAddressInfo(address)
 
@@ -188,6 +190,25 @@ class MainActivity : AppCompatActivity() {
 //        }else{
 //            mnemonicMultilineText.inputType = InputType.TYPE_CLASS_TEXT
 //        }
+    }
+
+    fun getDefaultAddressInfo(view: View) {
+        mViewModel = ViewModelProviders.of(this, AddressViewModelFactory(this.application, address as String))
+            .get<AddressViewModel>(
+                AddressViewModel::class.java
+            )
+        print(mViewModel.addressModel)
+        mViewModel.addressModel.observe(this, Observer { addressInfo ->
+            if(addressInfo != null)
+            {
+                val addressTextView: TextView = findViewById(R.id.AddressTextView)
+                addressTextView.setText(addressInfo.address)
+                val privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifMultilineText)
+                privateKeyWifTextView.setText(addressInfo.privateKeyWif)
+                val mnemonicMultilineText: TextView = findViewById(R.id.MnemonicMultilineText)
+                mnemonicMultilineText.setText(addressInfo.mnemonic)
+            }
+        })
     }
 
 //    fun main(args: Array<String>) {

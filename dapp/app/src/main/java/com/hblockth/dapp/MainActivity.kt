@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             address = "mg8atoeAz2b9dVjm6n6sACCjRb6fMc6kgs"  //"mnLKtTcMnmhchza8wPMLuk813j36sEpArK"  //"mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"
         }
         getbalance(address)
-        aaa(address)
+        setAddressInfo(address)
 
         setContentView(R.layout.activity_main)
     }
@@ -49,21 +49,21 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun aaa(address: String?){
+    fun setAddressInfo(address: String?){
         mViewModel = ViewModelProviders.of(this, AddressViewModelFactory(this.application, address as String))
             .get<AddressViewModel>(
                 AddressViewModel::class.java
             )
         print(mViewModel.addressModel)
         mViewModel.addressModel.observe(this, Observer { addressInfo ->
-
-            println("address")
-            println(addressInfo)
+//
+//            println("address")
+//            println(addressInfo)
             if(addressInfo != null)
             {
                 val addressTextView: TextView = findViewById(R.id.AddressTextView)
                 addressTextView.setText(addressInfo.address)
-                val privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifTextView)
+                val privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifMultilineText)
                 privateKeyWifTextView.setText(addressInfo.privateKeyWif)
                 val mnemonicMultilineText: TextView = findViewById(R.id.MnemonicMultilineText)
                 mnemonicMultilineText.setText(addressInfo.mnemonic)
@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
         //クリップボードのサービスのインスタンスを取得する
         var mManager: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         var addressTextView: TextView = findViewById(R.id.AddressTextView) as TextView
-        var clip: ClipData = ClipData.newPlainText("", addressTextView.text)
+        var clip: ClipData = ClipData.newPlainText("addressText", addressTextView.text)
         mManager.setPrimaryClip(clip)
     }
 
@@ -165,8 +165,8 @@ class MainActivity : AppCompatActivity() {
     fun copyClipboardPrivateKeyWif(view: View) {
         //クリップボードのサービスのインスタンスを取得する
         var mManager: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        var privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifTextView) as TextView
-        var clip: ClipData = ClipData.newPlainText("", privateKeyWifTextView.text)
+        var privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifMultilineText) as TextView
+        var clip: ClipData = ClipData.newPlainText("privateKeyWifText", privateKeyWifTextView.text)
         mManager.setPrimaryClip(clip)
     }
 
@@ -175,8 +175,19 @@ class MainActivity : AppCompatActivity() {
         //クリップボードのサービスのインスタンスを取得する
         var mManager: ClipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         var mnemonicMultilineText: TextView = findViewById(R.id.MnemonicMultilineText) as TextView
-        var clip: ClipData = ClipData.newPlainText("", mnemonicMultilineText.text)
+        var clip: ClipData = ClipData.newPlainText("mnemonicText", mnemonicMultilineText.text)
         mManager.setPrimaryClip(clip)
+    }
+
+    //https://monoworks.co.jp/post/android_develop_memo_2015111601/
+    fun displayMnemonic(view: View) {
+        //TODO: displayボタンを押したら、表示・非表示にする
+//        var mnemonicMultilineText: TextView = findViewById(R.id.MnemonicMultilineText) as TextView
+//        if(mnemonicMultilineText.inputType == InputType.TYPE_CLASS_TEXT){
+//            mnemonicMultilineText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+//        }else{
+//            mnemonicMultilineText.inputType = InputType.TYPE_CLASS_TEXT
+//        }
     }
 
 //    fun main(args: Array<String>) {

@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.github.kittinunf.fuel.gson.responseObject
 import com.github.kittinunf.fuel.httpGet
@@ -19,14 +20,19 @@ import com.hblockth.dapp.adapter.AddressViewAdapter
 import com.hblockth.dapp.utils.Utils
 import com.hblockth.dapp.viewmodels.AddressViewModel
 import com.hblockth.dapp.viewmodels.AddressViewModelFactory
+import com.hblockth.dapp.viewmodels.DefaultAddressViewModel
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mViewModel: AddressViewModel
+    private lateinit var mDefaultAddressViewModel: DefaultAddressViewModel
     private lateinit var mAdapter: AddressViewAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //TODO: Get default address info
-        val address: String = getDefaultAddressInfo()
+        getDefaultAddressInfo()
+        val addressTextView: TextView = findViewById(R.id.AddressTextView) as TextView
+        val address:String = addressTextView.text.toString()
         // Activity開始時にIntentを取得し、文字列をセットする
 //        val intent: Intent = getIntent()
 //        var address: String? = intent.getStringExtra(Utils.SELECTED_ADDRESS)
@@ -192,21 +198,14 @@ class MainActivity : AppCompatActivity() {
 //        }
     }
 
-    fun getDefaultAddressInfo(view: View) {
-        mViewModel = ViewModelProviders.of(this, AddressViewModelFactory(this.application, address as String))
-            .get<AddressViewModel>(
-                AddressViewModel::class.java
-            )
-        print(mViewModel.addressModel)
-        mViewModel.addressModel.observe(this, Observer { addressInfo ->
+    fun getDefaultAddressInfo() {
+        mDefaultAddressViewModel =  ViewModelProvider.NewInstanceFactory().create(DefaultAddressViewModel::class.java)
+        //print(mViewModel.addressModel)
+        mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
             if(addressInfo != null)
             {
                 val addressTextView: TextView = findViewById(R.id.AddressTextView)
                 addressTextView.setText(addressInfo.address)
-                val privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifMultilineText)
-                privateKeyWifTextView.setText(addressInfo.privateKeyWif)
-                val mnemonicMultilineText: TextView = findViewById(R.id.MnemonicMultilineText)
-                mnemonicMultilineText.setText(addressInfo.mnemonic)
             }
         })
     }

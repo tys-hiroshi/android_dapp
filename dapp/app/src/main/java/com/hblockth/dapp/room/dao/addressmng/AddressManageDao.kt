@@ -3,7 +3,7 @@ package com.hblockth.dapp.room.dao.addressmng
 import androidx.room.*
 import androidx.lifecycle.LiveData
 import com.hblockth.dapp.room.models.addressmng.AddressModel
-import com.hblockth.dapp.room.models.addressmng.DbAddressManage
+import com.hblockth.dapp.room.models.addressmng.DefaultAddressModel
 
 @Dao
 interface AddressManageDao {
@@ -22,8 +22,8 @@ interface AddressManageDao {
     @Query("SELECT * FROM addresses WHERE address = :address LIMIT 1")
     fun findByAddress(address: String): AddressModel
 
-//    @Query("SELECT * FROM defaultaddress LIMIT 1")
-//    fun findDefaultAddressForLiveData(): LiveData<DbAddressManage.DefaultAddressModel>
+    @Query("SELECT * FROM defaultaddress LIMIT 1")
+    fun findDefaultAddressForLiveData(): LiveData<DefaultAddressModel>
 
 //    @Insert
 //    fun insertAll(vararg addresses: MutableList<AddressModel>)
@@ -31,8 +31,8 @@ interface AddressManageDao {
     @Insert
     fun insert(vararg addresses: AddressModel)
 
-//    @Insert
-//    fun defaultinsert(vararg address: DbAddressManage.DefaultAddressModel)
+    @Insert
+    fun insertDefaultAddress(vararg address: DefaultAddressModel)
 
     @Delete
     fun delete(address: AddressModel)

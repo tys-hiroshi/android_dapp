@@ -10,13 +10,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hblockth.dapp.converters.Converters
 import com.hblockth.dapp.room.dao.addressmng.AddressManageDao
 import com.hblockth.dapp.room.models.addressmng.AddressModel
+import com.hblockth.dapp.room.models.addressmng.DefaultAddressModel
 import com.hblockth.dapp.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-@Database(entities = [AddressModel::class], version = 1, exportSchema = false)
+@Database(entities = [AddressModel::class, DefaultAddressModel::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun getAddressManageDao(): AddressManageDao

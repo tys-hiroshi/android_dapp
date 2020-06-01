@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity() {
             .get<AddressViewModel>(
                 AddressViewModel::class.java
             )
+        mDefaultAddressViewModel =  ViewModelProvider.NewInstanceFactory().create(DefaultAddressViewModel::class.java)
         print(mViewModel.addressModel)
         mViewModel.addressModel.observe(this, Observer { addressInfo ->
 //

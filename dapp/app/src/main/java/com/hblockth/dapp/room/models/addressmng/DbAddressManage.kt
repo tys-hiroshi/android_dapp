@@ -7,9 +7,9 @@ class DbAddressManage {
 }
 
 //https://developer.android.com/training/data-storage/room/defining-data#kotlin
-@Entity(tableName = "defaultaddress", primaryKeys = arrayOf("address"))
+@Entity(tableName = "defaultaddress")
 data class DefaultAddressModel(
-    var address: String
+    @PrimaryKey val address: String
 )
 
 //https://developer.android.com/training/data-storage/room/defining-data#kotlin

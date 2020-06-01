@@ -2,21 +2,20 @@ package com.hblockth.dapp.repositories
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
-import com.hblockth.dapp.room.dao.addressmng.DefaultAddressManageDao
-import com.hblockth.dapp.room.models.addressmng.AddressModel
-import com.hblockth.dapp.room.models.addressmng.DbAddressManage
+import com.hblockth.dapp.room.dao.addressmng.AddressManageDao
+import com.hblockth.dapp.room.models.addressmng.DefaultAddressModel
 
 //https://github.com/jianastrero/room-background-example/blob/b4d9505c489cfc406c74f613d18fbc372c5c7f48/app/src/main/java/com/jianastrero/roombackgroundexample/repositories/MessageRepository.kt
 
 class DefaultAddressRepository(
-    private val defaultAddressManageDao: DefaultAddressManageDao
+    private val addressManageDao: AddressManageDao
 ) {
     //NOTE: Get Default Address from defaultaddress table
-    fun findDefaultAddressForLiveData(): LiveData<AddressModel> = defaultAddressManageDao.findDefaultAddressForLiveData()
+    fun findDefaultAddressForLiveData(): LiveData<DefaultAddressModel> = addressManageDao.findDefaultAddressForLiveData()
 
     @WorkerThread
-    suspend fun insertDefaultAddress(vararg address: DbAddressManage.DefaultAddressModel) {
-        defaultAddressManageDao.insertDefaultAddress(*address)
+    suspend fun insertDefaultAddress(vararg address: DefaultAddressModel) {
+        addressManageDao.insertDefaultAddress(*address)
     }
 
 }

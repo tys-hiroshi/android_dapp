@@ -12,7 +12,7 @@ class DefaultAddressRepository(
     private val defaultAddressManageDao: DefaultAddressManageDao
 ) {
     //NOTE: Get Default Address from defaultaddress table
-    fun findDefaultAddressForLiveData(address : String): LiveData<AddressModel> = defaultAddressManageDao.findDefaultAddressForLiveData()
+    fun findDefaultAddressForLiveData(): LiveData<AddressModel> = defaultAddressManageDao.findDefaultAddressForLiveData()
 
     @WorkerThread
     suspend fun insertDefaultAddress(vararg address: DbAddressManage.DefaultAddressModel) {

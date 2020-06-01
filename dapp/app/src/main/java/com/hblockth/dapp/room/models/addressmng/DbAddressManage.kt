@@ -4,12 +4,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 class DbAddressManage {
-    //https://developer.android.com/training/data-storage/room/defining-data#kotlin
-    @Entity(tableName = "defaultaddress", primaryKeys = arrayOf("address"))
-    data class DefaultAddressModel(
-        var address: String
-    )
 }
+
+//https://developer.android.com/training/data-storage/room/defining-data#kotlin
+@Entity(tableName = "defaultaddress", primaryKeys = arrayOf("address"))
+data class DefaultAddressModel(
+    var address: String
+)
 
 //https://developer.android.com/training/data-storage/room/defining-data#kotlin
 @Entity(tableName = "addresses")

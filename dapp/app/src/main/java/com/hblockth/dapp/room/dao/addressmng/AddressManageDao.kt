@@ -22,8 +22,8 @@ interface AddressManageDao {
     @Query("SELECT * FROM addresses WHERE address = :address LIMIT 1")
     fun findByAddress(address: String): AddressModel
 
-    @Query("SELECT * FROM defaultaddress LIMIT 1")
-    fun findDefaultAddressForLiveData(): LiveData<DbAddressManage.DefaultAddressModel>
+//    @Query("SELECT * FROM defaultaddress LIMIT 1")
+//    fun findDefaultAddressForLiveData(): LiveData<DbAddressManage.DefaultAddressModel>
 
 //    @Insert
 //    fun insertAll(vararg addresses: MutableList<AddressModel>)
@@ -31,8 +31,8 @@ interface AddressManageDao {
     @Insert
     fun insert(vararg addresses: AddressModel)
 
-    @Insert
-    fun defaultinsert(vararg address: DbAddressManage.DefaultAddressModel)
+//    @Insert
+//    fun defaultinsert(vararg address: DbAddressManage.DefaultAddressModel)
 
     @Delete
     fun delete(address: AddressModel)

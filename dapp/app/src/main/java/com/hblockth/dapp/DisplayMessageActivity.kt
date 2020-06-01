@@ -29,11 +29,13 @@ import com.hblockth.dapp.room.db.AppDatabase
 import com.hblockth.dapp.room.models.addressmng.AddressModel
 import com.hblockth.dapp.utils.Utils
 import com.hblockth.dapp.viewmodels.AddAddressViewModel
+import com.hblockth.dapp.viewmodels.DefaultAddressViewModel
 import com.journeyapps.barcodescanner.BarcodeEncoder
 
 class DisplayMessageActivity : AppCompatActivity() {
 
     private lateinit var mViewModel: AddAddressViewModel
+    private lateinit var mDefaultAddressViewModel: DefaultAddressViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //TODO: ViewModelProviders is deprecated. https://qiita.com/sudo5in5k/items/1d70ec65fd264eed5f7c
@@ -156,6 +158,7 @@ class DisplayMessageActivity : AppCompatActivity() {
                             //NOTE: insert address to db
                             mViewModel.newAddressInsert(address as String, privateKeyWif as String, mnemonic as String)
                             //TODO: mViewModel.newAddressInsert(address as String, privateKeyWif as String, mnemonic as String)
+                            mDefaultAddressViewModel.newDefaultAddressInsert(address as String)
 //                            val db = Room.databaseBuilder(
 //                                applicationContext,
 //                                AppDatabase::class.java, "database-dapp"
@@ -165,6 +168,7 @@ class DisplayMessageActivity : AppCompatActivity() {
 //                            addressList.add(AddressModel(generateAddress?.address as String))
 
                             //addressManageDao.insert(AddressModel(generateAddress?.address as String))
+                            //mViewModel.newAddressInsert()
                         }
                     }
             }

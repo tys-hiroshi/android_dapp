@@ -25,10 +25,10 @@ class AddressRepository(
     fun findByAddress(address : String): AddressModel = addressManageDao.findByAddress(address)
 
     //NOTE: Get Default Address from defaultaddress table
-    fun findDefaultAddressForLiveData(): LiveData<DbAddressManage.DefaultAddressModel> = addressManageDao.findDefaultAddressForLiveData()
+    // fun findDefaultAddressForLiveData(): LiveData<DbAddressManage.DefaultAddressModel> = addressManageDao.findDefaultAddressForLiveData()
 
     @WorkerThread
-    suspend fun insert(vararg address: DbAddressManage.DefaultAddressModel) {
-        addressManageDao.defaultinsert(*address)
+    suspend fun insert(vararg address: AddressModel) {
+        addressManageDao.insert(*address)
     }
 }

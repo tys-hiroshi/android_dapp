@@ -3,7 +3,8 @@ package com.hblockth.dapp.viewmodels
 import android.app.Application
 import androidx.lifecycle.*
 import com.hblockth.dapp.repositories.AddressRepository
-import com.hblockth.dapp.room.db.AppDatabase
+import com.hblockth.dapp.repositories.DefaultAddressRepository
+import com.hblockth.dapp.room.db.DefaultAddressAppDatabase
 import com.hblockth.dapp.room.models.addressmng.AddressModel
 import com.hblockth.dapp.room.models.addressmng.DbAddressManage
 import kotlinx.coroutines.Dispatchers
@@ -13,11 +14,11 @@ import kotlinx.coroutines.withContext
 
 class DefaultAddressViewModel(application: Application) : AndroidViewModel(application) {
     val addressModel: LiveData<AddressModel>
-    val repository: AddressRepository
+    val repository: DefaultAddressRepository
 
     init {
-        repository = AddressRepository(
-            AppDatabase.getDatabase(application, viewModelScope).getAddressManageDao()
+        repository = DefaultAddressRepository(
+            DefaultAddressAppDatabase.getDatabase(application, viewModelScope).getAddressManageDao()
         )
         addressModel = repository.findDefaultAddressForLiveData()
     }
@@ -27,11 +28,11 @@ class DefaultAddressViewModel(application: Application) : AndroidViewModel(appli
         var defaultAddressModel = DbAddressManage.DefaultAddressModel(
             address = addressStr
         )
-        repository.insert(defaultAddressModel)
+        repository.insertDefaultAddress(defaultAddressModel)
     }
 
-    fun newAddressInsert(addressStr: String, privateKeyWifStr: String, mnemonicStr: String) {
-        addDefaultAddress(addressStr, privateKeyWifStr, mnemonicStr)
+    fun newDefaultAddressInsert(addressStr: String) {
+        addDefaultAddress(addressStr)
     }
 
 }

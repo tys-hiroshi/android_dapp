@@ -32,22 +32,9 @@ class MainActivity : AppCompatActivity() {
         //mDefaultAddressViewModel = ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
         super.onCreate(savedInstanceState)
         //TODO: Get default address info
-        //val editTextAddress: EditText = findViewById(R.id.PrivateKeyWifMultilineText) as EditText
-        //val privateKeyWifTextView = findViewById(R.id.PrivateKeyWifMultilineText) as TextView  // textViewAddress must not be null
-        var address:String = ""
         //addressTextView.setText("")
         //val privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifMultilineText)
         getDefaultAddressInfo()
-//        val textViewAddress = findViewById<TextView>(R.id.AddressTextView)
-//        val address:String = textViewAddress.text.toString()
-        // Activity開始時にIntentを取得し、文字列をセットする
-//        val intent: Intent = getIntent()
-//        var address: String? = intent.getStringExtra(Utils.SELECTED_ADDRESS)
-//        if(address == null){
-//            address = "mg8atoeAz2b9dVjm6n6sACCjRb6fMc6kgs"  //"mnLKtTcMnmhchza8wPMLuk813j36sEpArK"  //"mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy"
-//        }
-        getbalance(address)
-        setAddressInfo(address)
 
         setContentView(R.layout.activity_main)
     }
@@ -215,6 +202,9 @@ class MainActivity : AppCompatActivity() {
             {
                 val addressTextView: TextView = findViewById(R.id.AddressTextView)
                 addressTextView.setText(addressInfo.address)
+                //非同期処理なので、DBからデータが取れてからでないと onCreate で findViewById(R.id.AddressTextView) してもaddresは取れない
+                getbalance(addressInfo.address)
+                setAddressInfo(addressInfo.address)
             }
         })
     }

@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -31,8 +32,8 @@ class MainActivity : AppCompatActivity() {
         //mDefaultAddressViewModel = ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
         super.onCreate(savedInstanceState)
         //TODO: Get default address info
-
-        val privateKeyWifTextView = findViewById(R.id.PrivateKeyWifMultilineText) as TextView  // textViewAddress must not be null
+        val editTextAddress: EditText = findViewById(R.id.PrivateKeyWifMultilineText) as EditText
+        //val privateKeyWifTextView = findViewById(R.id.PrivateKeyWifMultilineText) as TextView  // textViewAddress must not be null
         var address:String = ""
         //addressTextView.setText("")
         //val privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifMultilineText)

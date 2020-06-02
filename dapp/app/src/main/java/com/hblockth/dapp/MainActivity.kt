@@ -28,11 +28,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mDefaultAddressViewModel: DefaultAddressViewModel
     private lateinit var mAdapter: AddressViewAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
+        //mDefaultAddressViewModel = ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
         super.onCreate(savedInstanceState)
         //TODO: Get default address info
+
+        val privateKeyWifTextView = findViewById<TextView>(R.id.PrivateKeyWifMultilineText)  // textViewAddress must not be null
+        var address:String = ""
+        //addressTextView.setText("")
+        //val privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifMultilineText)
         getDefaultAddressInfo()
-        val addressTextView: TextView = findViewById(R.id.AddressTextView) as TextView
-        val address:String = addressTextView.text.toString()
+//        val textViewAddress = findViewById<TextView>(R.id.AddressTextView)
+//        val address:String = textViewAddress.text.toString()
         // Activity開始時にIntentを取得し、文字列をセットする
 //        val intent: Intent = getIntent()
 //        var address: String? = intent.getStringExtra(Utils.SELECTED_ADDRESS)
@@ -62,7 +68,7 @@ class MainActivity : AppCompatActivity() {
             .get<AddressViewModel>(
                 AddressViewModel::class.java
             )
-        mDefaultAddressViewModel =  ViewModelProvider.NewInstanceFactory().create(DefaultAddressViewModel::class.java)
+        //mDefaultAddressViewModel =  ViewModelProvider.NewInstanceFactory().create(DefaultAddressViewModel::class.java)
         print(mViewModel.addressModel)
         mViewModel.addressModel.observe(this, Observer { addressInfo ->
 //
@@ -200,15 +206,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getDefaultAddressInfo() {
-        mDefaultAddressViewModel =  ViewModelProvider.NewInstanceFactory().create(DefaultAddressViewModel::class.java)
+
+        //mDefaultAddressViewModel =  ViewModelProvider.NewInstanceFactory().create(DefaultAddressViewModel::class.java)
         //print(mViewModel.addressModel)
-        mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
-            if(addressInfo != null)
-            {
-                val addressTextView: TextView = findViewById(R.id.AddressTextView)
-                addressTextView.setText(addressInfo.address)
-            }
-        })
+        if(mDefaultAddressViewModel.addressModel != null){
+            mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
+                if(addressInfo != null)
+                {
+                    val addressTextView: TextView = findViewById(R.id.AddressTextView)
+                    addressTextView.setText(addressInfo.address)
+                }
+            })
+        }
     }
 
 //    fun main(args: Array<String>) {

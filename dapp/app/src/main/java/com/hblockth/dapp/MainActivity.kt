@@ -25,14 +25,14 @@ import kotlinx.android.synthetic.main.activity_main.view.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mViewModel: AddressViewModel
-    private lateinit var mDefaultAddressViewModel: DefaultAddressViewModel
+    //private lateinit var mDefaultAddressViewModel: DefaultAddressViewModel
     private lateinit var mAdapter: AddressViewAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         //mDefaultAddressViewModel = ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
         super.onCreate(savedInstanceState)
         //TODO: Get default address info
 
-        val privateKeyWifTextView = findViewById<TextView>(R.id.PrivateKeyWifMultilineText)  // textViewAddress must not be null
+        val privateKeyWifTextView = findViewById(R.id.PrivateKeyWifMultilineText) as TextView  // textViewAddress must not be null
         var address:String = ""
         //addressTextView.setText("")
         //val privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifMultilineText)
@@ -209,15 +209,15 @@ class MainActivity : AppCompatActivity() {
 
         //mDefaultAddressViewModel =  ViewModelProvider.NewInstanceFactory().create(DefaultAddressViewModel::class.java)
         //print(mViewModel.addressModel)
-        if(mDefaultAddressViewModel.addressModel != null){
-            mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
-                if(addressInfo != null)
-                {
-                    val addressTextView: TextView = findViewById(R.id.AddressTextView)
-                    addressTextView.setText(addressInfo.address)
-                }
-            })
-        }
+//        if(mDefaultAddressViewModel.addressModel != null){
+//            mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
+//                if(addressInfo != null)
+//                {
+//                    val addressTextView: TextView = findViewById(R.id.AddressTextView)
+//                    addressTextView.setText(addressInfo.address)
+//                }
+//            })
+//        }
     }
 
 //    fun main(args: Array<String>) {

@@ -34,6 +34,9 @@ interface AddressManageDao {
     @Insert
     fun insertDefaultAddress(vararg address: DefaultAddressModel)
 
+    @Update
+    fun updateDefaultAddress(vararg address: DefaultAddressModel)
+
     @Delete
     fun delete(address: AddressModel)
 

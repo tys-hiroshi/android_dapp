@@ -16,6 +16,7 @@ import com.hblockth.dapp.model.AddressModel
 import com.hblockth.dapp.room.dao.addressmng.AddressManageDao
 import com.hblockth.dapp.utils.Utils
 import com.hblockth.dapp.viewmodels.AddressListViewModel
+import com.hblockth.dapp.viewmodels.DefaultAddressViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 //import com.hblockth.dapp.databinding.ActivityAddressListBinding
@@ -23,6 +24,7 @@ import java.util.Date
 class AddressListActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityAddressListBinding
     private lateinit var mViewModel: AddressListViewModel
+    private lateinit var mDefaultAddressViewModel: DefaultAddressViewModel
     private lateinit var mAdapter: AddressViewAdapter
     private var hasScrolledSteep = false
 
@@ -33,6 +35,7 @@ class AddressListActivity : AppCompatActivity() {
 //            DataBindingUtil.setContentView(this, R.layout.activity_address_list)
 
         mViewModel = ViewModelProviders.of(this).get(AddressListViewModel::class.java)
+        mDefaultAddressViewModel =  ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
         mAdapter = AddressViewAdapter(emptyList())
         //テストデータの生成
         //https://qiita.com/fu_neko/items/722e0ab5f0f1255f87bf
@@ -85,6 +88,13 @@ class AddressListActivity : AppCompatActivity() {
         //val result = getText("https://bsvnodeapi.herokuapp.com/generateaddress/test")
         //mgfPaFHyruQWVjHBks7rY9F3BbYrePvVAy
         //println(result)
+        //TODO: Default Address を更新する
+        mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
+            if(addressInfo != null)
+            {
+                mDefaultAddressViewModel.defaultAddressUpdate(address as String)
+            }
+        })
         intent.putExtra(Utils.SELECTED_ADDRESS, address)
         startActivity(intent)
     }

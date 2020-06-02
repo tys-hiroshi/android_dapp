@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.viewModelScope
@@ -158,8 +159,13 @@ class DisplayMessageActivity : AppCompatActivity() {
                             val privateKeyWif: String? = generateAddress?.privatekey_wif
                             //NOTE: insert address to db
                             mViewModel.newAddressInsert(address as String, privateKeyWif as String, mnemonic as String)
-                            //TODO: mViewModel.newAddressInsert(address as String, privateKeyWif as String, mnemonic as String)
-                            mDefaultAddressViewModel.newDefaultAddressInsert(address as String)
+                            //TODO: 新しいAddressを生成するときにdefaultaddress テーブルに追加する。既にレコードがある場合は、何もしない。
+                            mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
+                                if(addressInfo == null)
+                                {
+                                    mDefaultAddressViewModel.newDefaultAddressInsert(address as String)
+                                }
+                            })
 //                            val db = Room.databaseBuilder(
 //                                applicationContext,
 //                                AppDatabase::class.java, "database-dapp"

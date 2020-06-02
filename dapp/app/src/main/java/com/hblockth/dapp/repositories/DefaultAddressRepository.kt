@@ -18,4 +18,9 @@ class DefaultAddressRepository(
         addressManageDao.insertDefaultAddress(*address)
     }
 
+    @WorkerThread
+    suspend fun updateDefaultAddress(vararg address: DefaultAddressModel) {
+        addressManageDao.updateDefaultAddress(*address)
+    }
+
 }

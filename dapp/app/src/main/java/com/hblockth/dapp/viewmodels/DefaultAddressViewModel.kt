@@ -33,4 +33,16 @@ class DefaultAddressViewModel(application: Application) : AndroidViewModel(appli
         addDefaultAddress(addressStr)
     }
 
+    //DBのレコード講師員
+    fun modifyDefaultAddress(addressStr: String) = viewModelScope.launch(Dispatchers.IO) {
+        var defaultAddressModel = DefaultAddressModel(
+            address = addressStr
+        )
+        repository.updateDefaultAddress(defaultAddressModel)
+    }
+
+    fun defaultAddressUpdate(addressStr: String) {
+        modifyDefaultAddress(addressStr)
+    }
+
 }

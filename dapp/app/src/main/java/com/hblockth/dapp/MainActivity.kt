@@ -31,9 +31,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         //mDefaultAddressViewModel = ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
         super.onCreate(savedInstanceState)
-        //TODO: Get default address info
-        //addressTextView.setText("")
-        //val privateKeyWifTextView: TextView = findViewById(R.id.PrivateKeyWifMultilineText)
+        //NOTE: Get default address info
         getDefaultAddressInfo()
 
         setContentView(R.layout.activity_main)

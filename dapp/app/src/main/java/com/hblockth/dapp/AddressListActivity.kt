@@ -92,7 +92,8 @@ class AddressListActivity : AppCompatActivity() {
         mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
             if(addressInfo != null)
             {
-                mDefaultAddressViewModel.defaultAddressUpdate(address as String)
+                mDefaultAddressViewModel.defaultAddressDelete(addressInfo.address as String)
+                mDefaultAddressViewModel.newDefaultAddressInsert(address as String)
             }
         })
         intent.putExtra(Utils.SELECTED_ADDRESS, address)

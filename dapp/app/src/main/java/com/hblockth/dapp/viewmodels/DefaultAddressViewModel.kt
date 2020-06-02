@@ -33,7 +33,7 @@ class DefaultAddressViewModel(application: Application) : AndroidViewModel(appli
         addDefaultAddress(addressStr)
     }
 
-    //DBのレコード講師員
+    //DBのレコード更新
     fun modifyDefaultAddress(addressStr: String) = viewModelScope.launch(Dispatchers.IO) {
         var defaultAddressModel = DefaultAddressModel(
             address = addressStr
@@ -43,6 +43,18 @@ class DefaultAddressViewModel(application: Application) : AndroidViewModel(appli
 
     fun defaultAddressUpdate(addressStr: String) {
         modifyDefaultAddress(addressStr)
+    }
+
+    //DBのレコード更新
+    fun removeDefaultAddress(addressStr: String) = viewModelScope.launch(Dispatchers.IO) {
+        var defaultAddressModel = DefaultAddressModel(
+            address = addressStr
+        )
+        repository.updateDefaultAddress(defaultAddressModel)
+    }
+
+    fun defaultAddressDelete(addressStr: String) {
+        removeDefaultAddress(addressStr)
     }
 
 }

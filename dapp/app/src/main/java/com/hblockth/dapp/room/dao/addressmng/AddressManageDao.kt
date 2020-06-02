@@ -35,11 +35,11 @@ interface AddressManageDao {
     fun insertDefaultAddress(vararg address: DefaultAddressModel)
 
     @Update
-    fun updateDefaultAddress(vararg address: DefaultAddressModel)
+    suspend fun updateDefaultAddress(vararg address: DefaultAddressModel)
 
     @Delete
     fun delete(address: AddressModel)
 
-//    @Delete
-//    fun delete(address: DbAddressManage.DefaultAddressModel)
+    @Delete
+    fun deteDefaultAddress(vararg address: DefaultAddressModel)
 }

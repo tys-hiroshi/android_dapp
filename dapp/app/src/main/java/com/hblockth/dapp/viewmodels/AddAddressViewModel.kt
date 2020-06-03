@@ -28,7 +28,8 @@ class AddAddressViewModel (application: Application) : AndroidViewModel(applicat
         var addressModel = AddressModel(
             address = addressStr,
             privateKeyWif = privateKeyWifStr,
-            mnemonic = mnemonicStr
+            mnemonic = mnemonicStr,
+            createdAt = Date()
         )
         repository.insert(addressModel)
     }

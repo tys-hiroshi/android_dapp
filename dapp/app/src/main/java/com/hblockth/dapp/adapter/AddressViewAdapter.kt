@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hblockth.dapp.R
 import com.hblockth.dapp.room.models.addressmng.AddressModel
 import androidx.databinding.DataBindingUtil
+import com.hblockth.dapp.utils.Utils
 
 class AddressViewAdapter(var addressList: List<AddressModel>) :
     RecyclerView.Adapter<AddressViewAdapter.AddressViewHolder>() {
@@ -31,7 +32,7 @@ class AddressViewAdapter(var addressList: List<AddressModel>) :
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
         //holder.dateTextView.text = addressList[position].id
         holder.addressTextView.text = addressList[position].address
-
+        holder.dateTextView.text = Utils.dateTimeFormatter.format(addressList[position].createdAt)
         // タップしたとき
         holder.addressTextView.setOnClickListener {
             listener.onItemClickListener(it, position, addressList[position].address)

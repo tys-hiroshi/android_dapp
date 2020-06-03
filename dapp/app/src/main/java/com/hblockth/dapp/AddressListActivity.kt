@@ -41,18 +41,7 @@ class AddressListActivity : AppCompatActivity() {
         //テストデータの生成
         //https://qiita.com/fu_neko/items/722e0ab5f0f1255f87bf
         val date = SimpleDateFormat("yyyy/MM/dd").format(Date())
-        //val addressList = mutableListOf<AddressModel>()
 
-//        val db = Room.databaseBuilder(
-//            applicationContext,
-//            AddressManageDatabase::class.java, "database-dapp"
-//        ).build()
-//        val addressManageDao: AddressManageDao = DApplication.db.addressManageDao()
-//        val addresses:List<com.hblockth.dapp.room.models.addressmng.AddressModel> = addressManageDao.getAll()
-
-//        for (item in addressList){
-//            addressList.add(AddressModel(item.address, "2020/05/10"))
-//        }
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_address_list)
         mBinding.viewModel = mViewModel

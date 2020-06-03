@@ -13,6 +13,7 @@ object Utils {
 
     private var formatter = SimpleDateFormat("h:mm aa", Locale.getDefault())
     private var dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    var dateTimeFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
     private val df = DecimalFormat("###.#")
 
     fun getTimeString(timeInMillis: Long): String {

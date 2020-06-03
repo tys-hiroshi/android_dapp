@@ -2,6 +2,7 @@ package com.hblockth.dapp.room.models.addressmng
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 class DbAddressManage {
 }
@@ -18,5 +19,6 @@ data class AddressModel(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
     var address: String,
     var privateKeyWif: String,
-    var mnemonic: String
+    var mnemonic: String,
+    var createdAt: Date
 )

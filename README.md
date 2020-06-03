@@ -1,2 +1,1 @@
-# github-template-repository-android
-android template
+# android dapp

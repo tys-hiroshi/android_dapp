@@ -30,6 +30,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAdapter: AddressViewAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         //mDefaultAddressViewModel = ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
+//        val intent: Intent = getIntent()
+//        var address: String? = intent.getStringExtra(Utils.SELECTED_ADDRESS)
+//        if(address != null){
+//            mDefaultAddressViewModel.newDefaultAddressInsert(address as String)
+//        }
         super.onCreate(savedInstanceState)
         //NOTE: Get default address info
         getDefaultAddressInfo()

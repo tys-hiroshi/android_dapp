@@ -50,7 +50,7 @@ class DefaultAddressViewModel(application: Application) : AndroidViewModel(appli
         var defaultAddressModel = DefaultAddressModel(
             address = addressStr
         )
-        repository.updateDefaultAddress(defaultAddressModel)
+        repository.deleteDefaultAddress(defaultAddressModel)
     }
 
     fun defaultAddressDelete(addressStr: String) {

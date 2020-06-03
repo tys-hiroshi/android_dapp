@@ -1,24 +1,25 @@
 package com.hblockth.dapp
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.hblockth.dapp.adapter.AddressViewAdapter
 import com.hblockth.dapp.databinding.ActivityAddressListBinding
-import com.hblockth.dapp.model.AddressModel
-import com.hblockth.dapp.room.dao.addressmng.AddressManageDao
 import com.hblockth.dapp.utils.Utils
 import com.hblockth.dapp.viewmodels.AddressListViewModel
 import com.hblockth.dapp.viewmodels.DefaultAddressViewModel
+import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
+
+
 //import com.hblockth.dapp.databinding.ActivityAddressListBinding
 
 class AddressListActivity : AppCompatActivity() {
@@ -92,8 +93,11 @@ class AddressListActivity : AppCompatActivity() {
         mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
             if(addressInfo != null)
             {
-                mDefaultAddressViewModel.defaultAddressDelete(addressInfo.address as String)
-                mDefaultAddressViewModel.newDefaultAddressInsert(address as String)
+                Completable.fromAction { mDefaultAddressViewModel.defaultAddressDelete(address as String) }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.single())
+                    .subscribe()
+
             }
         })
         intent.putExtra(Utils.SELECTED_ADDRESS, address)

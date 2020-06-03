@@ -24,8 +24,8 @@ class DefaultAddressRepository(
     }
 
     @WorkerThread
-    suspend fun deteDefaultAddress(vararg address: DefaultAddressModel) {
-        addressManageDao.deteDefaultAddress(*address)
+    fun deleteDefaultAddress(vararg address: DefaultAddressModel) {
+        addressManageDao.deleteAndCreate(*address)
     }
 
 }

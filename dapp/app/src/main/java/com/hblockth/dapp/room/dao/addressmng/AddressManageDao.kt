@@ -1,7 +1,7 @@
 package com.hblockth.dapp.room.dao.addressmng
 
-import androidx.room.*
 import androidx.lifecycle.LiveData
+import androidx.room.*
 import com.hblockth.dapp.room.models.addressmng.AddressModel
 import com.hblockth.dapp.room.models.addressmng.DefaultAddressModel
 
@@ -40,6 +40,14 @@ interface AddressManageDao {
     @Delete
     fun delete(address: AddressModel)
 
-    @Delete
-    fun deteDefaultAddress(vararg address: DefaultAddressModel)
+    @Query("DELETE FROM defaultaddress")
+    fun deleteDefaultAddressAll()
+
+    //https://stackoverflow.com/questions/53344456/room-delete-executes-after-i-insert-new-values/53345937
+    @Transaction
+    open fun deleteAndCreate(vararg address: DefaultAddressModel): Unit {
+        deleteDefaultAddressAll()
+        insertDefaultAddress(*address)
+    }
+
 }

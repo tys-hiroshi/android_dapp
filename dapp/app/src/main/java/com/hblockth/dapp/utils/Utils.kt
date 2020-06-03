@@ -14,6 +14,12 @@ object Utils {
     private var formatter = SimpleDateFormat("h:mm aa", Locale.getDefault())
     private var dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     var dateTimeFormatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+
+    /// Upload file
+    private const val BNOTEAPI_BASEURL = "http://bnoteapi.herokuapp.com/v1"
+    //ref http://bnoteapi.herokuapp.com/v1/ui/#/
+    const val BNOTEAPI_API_UPLOAD = "${BNOTEAPI_BASEURL}/api/upload"
+
     private val df = DecimalFormat("###.#")
 
     fun getTimeString(timeInMillis: Long): String {

@@ -54,6 +54,12 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun viewUpload(view: View) {
+        val intent: Intent = Intent(this@MainActivity,
+            FileUploadActivity::class.java)
+        startActivity(intent)
+    }
+
     fun setAddressInfo(address: String?){
         mViewModel = ViewModelProviders.of(this, AddressViewModelFactory(this.application, address as String))
             .get<AddressViewModel>(

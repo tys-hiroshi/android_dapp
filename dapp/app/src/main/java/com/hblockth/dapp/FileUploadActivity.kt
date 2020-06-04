@@ -21,6 +21,7 @@ class FileUploadActivity : AppCompatActivity() {
     private lateinit var imageButton: Button
     private lateinit var sendButton: Button
     private var imageData: ByteArray? = null
+    private val postURL: String = "https://ptsv2.com/t/54odo-1576291398/post" // remember to use your own api
 
     companion object {
         private const val IMAGE_PICK_CODE = 999
@@ -36,7 +37,7 @@ class FileUploadActivity : AppCompatActivity() {
         }
         sendButton = findViewById(R.id.sendButton)
         sendButton.setOnClickListener {
-            uploadImage()
+            uploadImage("")
         }
     }
 
@@ -48,23 +49,23 @@ class FileUploadActivity : AppCompatActivity() {
         )
     }
 
-    fun getDefaultAddressInfo() {
-        mDefaultAddressViewModel = ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
-        //mDefaultAddressViewModel =  ViewModelProvider.NewInstanceFactory().create(DefaultAddressViewModel::class.java)
-        //print(mViewModel.addressModel)
-        mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
-            if(addressInfo != null)
-            {
-                uploadImage(addressInfo.address)
-            }
-        })
-    }
+//    fun getDefaultAddressInfo() {
+//        mDefaultAddressViewModel = ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
+//        //mDefaultAddressViewModel =  ViewModelProvider.NewInstanceFactory().create(DefaultAddressViewModel::class.java)
+//        //print(mViewModel.addressModel)
+//        mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
+//            if(addressInfo != null)
+//            {
+//                uploadImage(addressInfo.address)
+//            }
+//        })
+//    }
 
-    private fun uploadImage(val privatekeyWif: String) {
+    private fun uploadImage(privatekeyWif: String) {
         imageData?: return
         val request = object : VolleyFileUploadRequest(
             Method.POST,
-            Utils.BNOTEAPI_API_UPLOAD,
+            postURL, //Utils.BNOTEAPI_API_UPLOAD,
             Response.Listener {
                 println("response is: $it")
             },
@@ -74,8 +75,9 @@ class FileUploadActivity : AppCompatActivity() {
         ) {
             override fun getByteData(): MutableMap<String, FileDataPart> {
                 var params = HashMap<String, FileDataPart>()
-                params["file"] = FileDataPart("image", imageData!!, "jpeg")
-                params["privatekeyWif"] = privatekeyWif
+                params["imageFile"] = FileDataPart("image", imageData!!, "jpeg")
+                //params["file"] = FileDataPart("image", imageData!!, "jpeg")
+                //params["privatekeyWif"] = privatekeyWif
                 return params
             }
         }

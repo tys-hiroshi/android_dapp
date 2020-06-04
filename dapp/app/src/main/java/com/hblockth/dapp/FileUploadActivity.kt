@@ -65,7 +65,7 @@ class FileUploadActivity : AppCompatActivity() {
         imageData?: return
         val request = object : VolleyFileUploadRequest(
             Method.POST,
-            postURL, //Utils.BNOTEAPI_API_UPLOAD,
+            Utils.BNOTEAPI_API_UPLOAD,  //postURL, //
             Response.Listener {
                 println("response is: $it")
             },
@@ -73,11 +73,16 @@ class FileUploadActivity : AppCompatActivity() {
                 println("error is: $it")
             }
         ) {
-            override fun getByteData(): MutableMap<String, FileDataPart> {
-                var params = HashMap<String, FileDataPart>()
-                params["imageFile"] = FileDataPart("image", imageData!!, "jpeg")
-                //params["file"] = FileDataPart("image", imageData!!, "jpeg")
-                //params["privatekeyWif"] = privatekeyWif
+            override fun getHeaders(): MutableMap<String, String> {
+                var params = HashMap<String, String>()
+                params["x-api-key"] = "apikey0"
+                return params
+            }
+            override fun getByteData(): MutableMap<String, String> {
+                var params = HashMap<String, String>()
+                //params["imageFile"] = FileDataPart("image", imageData!!, "jpeg")
+                params["file"] = imageData.toString()  //FileDataPart("image", imageData!!, "jpeg")
+                params["privatekeyWif"] = privatekeyWif
                 return params
             }
         }

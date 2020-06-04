@@ -40,7 +40,8 @@ open class VolleyFileUploadRequest(
             if (params != null && params.isNotEmpty()) {
                 processParams(dataOutputStream, params, paramsEncoding)
             }
-            val data = getByteData() as? Map<String, FileDataPart>?
+            //val data = getByteData() as? Map<String, FileDataPart>?
+            val data = getByteData() as? Map<String, String>?
             if (data != null && data.isNotEmpty()) {
                 processData(dataOutputStream, data)
             }
@@ -89,16 +90,20 @@ open class VolleyFileUploadRequest(
     }
 
     @Throws(IOException::class)
-    private fun processData(dataOutputStream: DataOutputStream, data: Map<String, FileDataPart>) {
+    private fun processData(dataOutputStream: DataOutputStream, data: Map<String, String>) {
         data.forEach {
             val dataFile = it.value
             dataOutputStream.writeBytes("$divider$boundary$ending")
-            dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"${it.key}\"; filename=\"${dataFile.fileName}\"$ending")
-            if (dataFile.type != null && dataFile.type.trim().isNotEmpty()) {
-                dataOutputStream.writeBytes("Content-Type: ${dataFile.type}$ending")
-            }
+//            dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"${it.key}\"; filename=\"${dataFile.fileName}\"$ending")
+//            if (dataFile.type != null && dataFile.type.trim().isNotEmpty()) {
+//                dataOutputStream.writeBytes("Content-Type: ${dataFile.type}$ending")
+//            }
+            dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"${it.key}\"; filename=\"file.jpg\"$ending")
+//            if (dataFile.type != null && dataFile.type.trim().isNotEmpty()) {
+//                dataOutputStream.writeBytes("Content-Type: ${dataFile.type}$ending")
+//            }
             dataOutputStream.writeBytes(ending)
-            val fileInputStream = ByteArrayInputStream(dataFile.data)
+            val fileInputStream = ByteArrayInputStream(dataFile.toByteArray())
             var bytesAvailable = fileInputStream.available()
             val maxBufferSize = 1024 * 1024
             var bufferSize = min(bytesAvailable, maxBufferSize)

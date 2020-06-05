@@ -1,9 +1,8 @@
 package com.hblockth.dapp.requests
 
 import com.android.volley.AuthFailureError
+import com.android.volley.Header
 import com.android.volley.Response
-
-import com.android.volley.toolbox.StringRequest
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.IOException
@@ -14,6 +13,12 @@ class MultipartStringRequest(
     listener: Response.Listener<String?>?,
     errorListener: Response.ErrorListener?
 ) :
+
+    val headers: Map<String?, String?> = HashMap()
+    @Throws(AuthFailureError::class)
+    fun getHeaders(): Map<String?, String?>? {
+        return headers
+}
     StringRequest(Method.POST, url, listener, errorListener) {
     private val boundary = "----boundary" + System.currentTimeMillis()
 
@@ -65,6 +70,10 @@ class MultipartStringRequest(
             dos.writeBytes(CRLF)
             dos.writeBytes("--$boundary$CRLF")
         }
+    }
+
+    fun setAuthorization(headersParams : Map<String, String>) {
+        this.textParams = "x-api-key", apiKey;
     }
 
     fun setTextParams(textParams: Map<String, String>) {

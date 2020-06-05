@@ -1,12 +1,16 @@
 package com.hblockth.dapp
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Response
+import com.android.volley.toolbox.Volley
 import com.hblockth.dapp.requests.MultipartStringRequest
 import com.hblockth.dapp.utils.Utils
+import java.io.IOException
 
 
 class FileUploadActivity : AppCompatActivity() {
@@ -29,7 +33,7 @@ class FileUploadActivity : AppCompatActivity() {
         }
         sendButton = findViewById(R.id.sendButton)
         sendButton.setOnClickListener {
-            uploadImage("cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V")
+            //uploadImage("cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V")
         }
     }
 
@@ -52,8 +56,8 @@ class FileUploadActivity : AppCompatActivity() {
 //            }
 //        })
 //    }
-
-    private fun uploadImage(privateKeyWif: String){
+    @Throws(IOException::class)
+    private fun uploadImage(privateKeyWif: String, imageUri: Uri){
         val request = MultipartStringRequest(
             Utils.BNOTEAPI_API_UPLOAD,
             Response.Listener<String?> {
@@ -63,13 +67,32 @@ class FileUploadActivity : AppCompatActivity() {
                 // do something
             }
         )
+
+        val headerParams: MutableMap<String, String> = HashMap()
+        headerParams["privatekey_wif"] = privateKeyWif
+        request.setTextParams(headerParams)
         val textParams: MutableMap<String, String> = HashMap()
         textParams["privatekey_wif"] = privateKeyWif
         request.setTextParams(textParams)
         val binaryParams: MutableMap<String, String> = HashMap()
-        binaryParams["file"] = "/path/to/file.jpeg"
+        binaryParams["file"] = imageUri.toString()
         request.setBinaryParams(binaryParams)
+
+        Volley.newRequestQueue(this).add(request)
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
+            val uri = data?.data
+            if (uri != null) {
+                var privateKeyWif: String = "cUVRvm7zxnLxUQ6bgnoHD8XroXcsk6xMwhxMiqoZPaHY2bUW8wKc"
+                uploadImage(privateKeyWif, uri)
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+
 //    private fun uploadImage(privatekeyWif: String) {
 //        imageData?: return
 //        val request = object : VolleyFileUploadRequest(

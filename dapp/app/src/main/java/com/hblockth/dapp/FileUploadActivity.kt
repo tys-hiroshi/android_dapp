@@ -82,7 +82,7 @@ class FileUploadActivity : AppCompatActivity() {
                 var params = HashMap<String, String>()
                 //params["imageFile"] = FileDataPart("image", imageData!!, "jpeg")
                 params["file"] = imageData.toString()  //FileDataPart("image", imageData!!, "jpeg")
-                params["privatekeyWif"] = privatekeyWif
+                params["privatekey_wif"] = privatekeyWif
                 return params
             }
         }

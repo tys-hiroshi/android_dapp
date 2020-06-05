@@ -1,21 +1,13 @@
 package com.hblockth.dapp
 
-import android.app.Activity
 import android.content.Intent
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView
-import androidx.lifecycle.ViewModelProviders
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Response
-import com.android.volley.toolbox.Volley
-import com.hblockth.dapp.requests.FileDataPart
-import com.hblockth.dapp.requests.VolleyFileUploadRequest
+import com.hblockth.dapp.requests.MultipartStringRequest
 import com.hblockth.dapp.utils.Utils
-import com.hblockth.dapp.viewmodels.DefaultAddressViewModel
-import kotlinx.android.synthetic.main.list_address.*
-import java.io.IOException
+
 
 class FileUploadActivity : AppCompatActivity() {
     private lateinit var imageButton: Button
@@ -37,7 +29,7 @@ class FileUploadActivity : AppCompatActivity() {
         }
         sendButton = findViewById(R.id.sendButton)
         sendButton.setOnClickListener {
-            uploadImage("")
+            uploadImage("cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V")
         }
     }
 
@@ -61,50 +53,67 @@ class FileUploadActivity : AppCompatActivity() {
 //        })
 //    }
 
-    private fun uploadImage(privatekeyWif: String) {
-        imageData?: return
-        val request = object : VolleyFileUploadRequest(
-            Method.POST,
-            Utils.BNOTEAPI_API_UPLOAD,  //postURL, //
-            Response.Listener {
-                println("response is: $it")
+    private fun uploadImage(privateKeyWif: String){
+        val request = MultipartStringRequest(
+            Utils.BNOTEAPI_API_UPLOAD,
+            Response.Listener<String?> {
+                // do something
             },
             Response.ErrorListener {
-                println("error is: $it")
+                // do something
             }
-        ) {
-            override fun getHeaders(): MutableMap<String, String> {
-                var params = HashMap<String, String>()
-                params["x-api-key"] = "apikey0"
-                return params
-            }
-            override fun getByteData(): MutableMap<String, String> {
-                var params = HashMap<String, String>()
-                //params["imageFile"] = FileDataPart("image", imageData!!, "jpeg")
-                params["file"] = imageData.toString()  //FileDataPart("image", imageData!!, "jpeg")
-                params["privatekeyWif"] = privatekeyWif
-                return params
-            }
-        }
-        Volley.newRequestQueue(this).add(request)
+        )
+        val textParams: MutableMap<String, String> = HashMap()
+        textParams["privatekey_wif"] = privateKeyWif
+        request.setTextParams(textParams)
+        val binaryParams: MutableMap<String, String> = HashMap()
+        binaryParams["file"] = "/path/to/file.jpeg"
+        request.setBinaryParams(binaryParams)
     }
-
-    @Throws(IOException::class)
-    private fun createImageData(uri: Uri) {
-        val inputStream = contentResolver.openInputStream(uri)
-        inputStream?.buffered()?.use {
-            imageData = it.readBytes()
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-            val uri = data?.data
-            if (uri != null) {
-                //imageView.setImageURI(uri)
-                createImageData(uri)
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
+//    private fun uploadImage(privatekeyWif: String) {
+//        imageData?: return
+//        val request = object : VolleyFileUploadRequest(
+//            Method.POST,
+//            Utils.BNOTEAPI_API_UPLOAD,  //postURL, //
+//            Response.Listener {
+//                println("response is: $it")
+//            },
+//            Response.ErrorListener {
+//                println("error is: $it")
+//            }
+//        ) {
+//            override fun getHeaders(): MutableMap<String, String> {
+//                var params = HashMap<String, String>()
+//                params["x-api-key"] = "apikey0"
+//                return params
+//            }
+//            override fun getByteData(): MutableMap<String, String> {
+//                var params = HashMap<String, String>()
+//                //params["imageFile"] = FileDataPart("image", imageData!!, "jpeg")
+//                params["file"] = imageData.toString()  //FileDataPart("image", imageData!!, "jpeg")
+//                params["privatekeyWif"] = privatekeyWif
+//                return params
+//            }
+//        }
+//        Volley.newRequestQueue(this).add(request)
+//    }
+//
+//    @Throws(IOException::class)
+//    private fun createImageData(uri: Uri) {
+//        val inputStream = contentResolver.openInputStream(uri)
+//        inputStream?.buffered()?.use {
+//            imageData = it.readBytes()
+//        }
+//    }
+//
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
+//            val uri = data?.data
+//            if (uri != null) {
+//                //imageView.setImageURI(uri)
+//                createImageData(uri)
+//            }
+//        }
+//        super.onActivityResult(requestCode, resultCode, data)
+//    }
 }

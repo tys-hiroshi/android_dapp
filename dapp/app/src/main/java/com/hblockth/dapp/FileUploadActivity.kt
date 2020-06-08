@@ -1,6 +1,8 @@
 package com.hblockth.dapp
 
+import android.R.attr
 import android.app.Activity
+import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -11,8 +13,11 @@ import com.android.volley.Response
 import com.android.volley.toolbox.Volley
 import com.hblockth.dapp.requests.MultipartStringRequest
 import com.hblockth.dapp.utils.Utils
-import okhttp3.*
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.IOException
@@ -28,6 +33,7 @@ class FileUploadActivity : AppCompatActivity() {
         private const val IMAGE_PICK_CODE = 999
     }
 
+    private var filePath: String = ""
     //https://medium.com/better-programming/how-to-upload-an-image-file-to-your-server-using-volley-in-kotlin-a-step-by-step-tutorial-23f3c0603ec2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +45,7 @@ class FileUploadActivity : AppCompatActivity() {
         sendButton = findViewById(R.id.sendButton)
         sendButton.setOnClickListener {
             //uploadImage("cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V")
+            uploadImage("cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V", filePath)
         }
     }
 
@@ -61,65 +68,71 @@ class FileUploadActivity : AppCompatActivity() {
 //            }
 //        })
 //    }
-    @Throws(IOException::class)
-    private fun uploadImage(privateKeyWif: String, imageUri: String){
-        val request = MultipartStringRequest(
-            Utils.BNOTEAPI_API_UPLOAD,
-            Response.Listener<String?> {
-                // do something
-            },
-            Response.ErrorListener {
-                // do something
-            }
-        )
-        val textParams: MutableMap<String, String> = HashMap()
-        textParams["privatekey_wif"] = privateKeyWif
-        request.setTextParams(textParams)
-        val binaryParams: MutableMap<String, String> = HashMap()
-        binaryParams["file"] = imageUri.toString()
-        request.setBinaryParams(binaryParams)
+    private fun uploadImage(privateKeyWif: String, filePath: String) {
 
-        Volley.newRequestQueue(this).add(request)
+        //TODO: file upload
+        //https://cpoint-lab.co.jp/article/201812/6921/
+        //var filePath = getRealPathFromURI(uri)
+        //uploadImage(privateKeyWif, filePath as String)
+        val client: OkHttpClient = OkHttpClient().newBuilder().build()
+        val mediaType: MediaType? = "text/plain; charset=utf-8".toMediaTypeOrNull();
+        val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
+        //https://github.com/esafirm/android-salesapp/blob/96a6060dce5dcc501582658921390a160e7b489d/app/src/main/kotlin/com/arx/android/salesapp/data/model/place/PlacePostParameter.kt
+        var multipartBody = builder.addFormDataPart("privatekey_wif", "privatekey_wif")
+            .addFormDataPart(
+                "file", filePath,
+                File(filePath)
+                    .asRequestBody("application/octet-stream".toMediaTypeOrNull())
+            ).build()
+    //                val body: RequestBody = Request.Builder()
+    //                    .
+    //                    .method("POST", requestBody)
+    //                    .addFormDataPart("privatekey_wif", "privatekey_wif")
+    //                    .addFormDataPart(
+    //                        "file", "/C:/Users/Tashiro/Pictures/uniswap.jpg",
+    //                        RequestBody.create(
+    //                            MediaType.parse("application/octet-stream"),
+    //                            File("/C:/Users/Tashiro/Pictures/uniswap.jpg")
+    //                        )
+    //                    )
+    //                    .build()
+        val request: Request = Request.Builder()
+            .url("https://bnoteapi.herokuapp.com/v1/api/upload")
+            .method("POST", multipartBody)
+            .addHeader("x-api-key", "aaaaaaa")
+            .build()
+        val response = client.newCall(request).execute()
+        println(response.message)
+        // override if necessary
     }
+//    @Throws(IOException::class)
+//    private fun uploadImage(privateKeyWif: String, imageUri: String){
+//        val request = MultipartStringRequest(
+//            Utils.BNOTEAPI_API_UPLOAD,
+//            Response.Listener<String?> {
+//                // do something
+//            },
+//            Response.ErrorListener {
+//                // do something
+//            }
+//        )
+//        val textParams: MutableMap<String, String> = HashMap()
+//        textParams["privatekey_wif"] = privateKeyWif
+//        request.setTextParams(textParams)
+//        val binaryParams: MutableMap<String, String> = HashMap()
+//        binaryParams["file"] = imageUri.toString()
+//        request.setBinaryParams(binaryParams)
+//
+//        Volley.newRequestQueue(this).add(request)
+//    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             val uri = data?.data
             if (uri != null) {
                 var privateKeyWif: String = "cUVRvm7zxnLxUQ6bgnoHD8XroXcsk6xMwhxMiqoZPaHY2bUW8wKc"
-                //TODO: file upload
-                //https://cpoint-lab.co.jp/article/201812/6921/
-                var filePath = getRealPathFromURI(uri)
-                //uploadImage(privateKeyWif, filePath as String)
-                val client: OkHttpClient = OkHttpClient().newBuilder().build()
-                val mediaType: MediaType? = "text/plain; charset=utf-8".toMediaTypeOrNull();
-                val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
-                //https://github.com/esafirm/android-salesapp/blob/96a6060dce5dcc501582658921390a160e7b489d/app/src/main/kotlin/com/arx/android/salesapp/data/model/place/PlacePostParameter.kt
-                var multipartBody = builder.addFormDataPart("privatekey_wif", "privatekey_wif")
-                    .addFormDataPart(
-                        "file", filePath,
-                        File(filePath)
-                            .asRequestBody("application/octet-stream".toMediaTypeOrNull())
-                    ).build()
-//                val body: RequestBody = Request.Builder()
-//                    .
-//                    .method("POST", requestBody)
-//                    .addFormDataPart("privatekey_wif", "privatekey_wif")
-//                    .addFormDataPart(
-//                        "file", "/C:/Users/Tashiro/Pictures/uniswap.jpg",
-//                        RequestBody.create(
-//                            MediaType.parse("application/octet-stream"),
-//                            File("/C:/Users/Tashiro/Pictures/uniswap.jpg")
-//                        )
-//                    )
-//                    .build()
-                val request: Request = Request.Builder()
-                    .url("https://bnoteapi.herokuapp.com/v1/api/upload")
-                    .method("POST", multipartBody)
-                    .addHeader("x-api-key", "aaaaaaa")
-                    .build()
-                val response = client.newCall(request).execute()
-                println(response.message)
+                filePath = getRealPathFromURI(uri) as String
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

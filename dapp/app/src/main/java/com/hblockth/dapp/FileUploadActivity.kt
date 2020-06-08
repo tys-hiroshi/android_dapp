@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Response
@@ -57,7 +58,7 @@ class FileUploadActivity : AppCompatActivity() {
 //        })
 //    }
     @Throws(IOException::class)
-    private fun uploadImage(privateKeyWif: String, imageUri: Uri){
+    private fun uploadImage(privateKeyWif: String, imageUri: String){
         val request = MultipartStringRequest(
             Utils.BNOTEAPI_API_UPLOAD,
             Response.Listener<String?> {
@@ -67,10 +68,6 @@ class FileUploadActivity : AppCompatActivity() {
                 // do something
             }
         )
-
-        val headerParams: MutableMap<String, String> = HashMap()
-        headerParams["privatekey_wif"] = privateKeyWif
-        request.setTextParams(headerParams)
         val textParams: MutableMap<String, String> = HashMap()
         textParams["privatekey_wif"] = privateKeyWif
         request.setTextParams(textParams)
@@ -86,11 +83,50 @@ class FileUploadActivity : AppCompatActivity() {
             val uri = data?.data
             if (uri != null) {
                 var privateKeyWif: String = "cUVRvm7zxnLxUQ6bgnoHD8XroXcsk6xMwhxMiqoZPaHY2bUW8wKc"
-                uploadImage(privateKeyWif, uri)
+                //TODO: file upload
+                //https://cpoint-lab.co.jp/article/201812/6921/
+                var filePath = getRealPathFromURI(uri)
+                uploadImage(privateKeyWif, filePath as String)
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
+
+    private fun getRealPathFromURI(contentURI: Uri): String? {
+        val result: String?
+        val cursor =
+            contentResolver.query(contentURI, null, null, null, null)
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.path
+        } else {
+            cursor.moveToFirst()
+            val idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+            result = cursor.getString(idx)
+            cursor.close()
+        }
+        return result
+    }
+//    private fun getPictPath(uri: Uri): String? {
+//        val id = DocumentsContract.getDocumentId(uri)
+//        val selection = "_id=?"
+//        val selectionArgs =
+//            arrayOf(id.split(":".toRegex()).toTypedArray()[1])
+//        var file: File? = null
+//        val cursor: Cursor? = contentResolver.query(
+//            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//            arrayOf(MediaStore.MediaColumns.DATA),
+//            selection,
+//            selectionArgs,
+//            null
+//        )
+//        if (cursor != null && cursor.moveToFirst()) {
+//            file = File(cursor.getString(0))
+//        }
+//        cursor?.close()
+//        return if (file != null) {
+//            file.getAbsolutePath()
+//        } else null
+//    }
 
 
 //    private fun uploadImage(privatekeyWif: String) {

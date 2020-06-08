@@ -3,6 +3,7 @@ package com.hblockth.dapp.requests
 import com.android.volley.AuthFailureError
 import com.android.volley.Header
 import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.IOException
@@ -14,21 +15,19 @@ class MultipartStringRequest(
     errorListener: Response.ErrorListener?
 ) :
 
-    val headers: Map<String?, String?> = HashMap()
-    @Throws(AuthFailureError::class)
-    fun getHeaders(): Map<String?, String?>? {
-        return headers
-}
     StringRequest(Method.POST, url, listener, errorListener) {
-    private val boundary = "----boundary" + System.currentTimeMillis()
+        private val boundary = "----boundary" + System.currentTimeMillis()
 
-    // テキストパラメータ nameとvalue
-    private var textParams: Map<String, String> = HashMap()
+        // テキストパラメータ nameとvalue
+        private var headersParams: Map<String, String> = HashMap()
 
-    // バイナリパラメータ nameとファイルパス
-    private var binaryParams: Map<String, String> = HashMap()
-    override fun getBodyContentType(): String {
-        return "multipart/form-data;boundary=$boundary"
+        // テキストパラメータ nameとvalue
+        private var textParams: Map<String, String> = HashMap()
+
+        // バイナリパラメータ nameとファイルパス
+        private var binaryParams: Map<String, String> = HashMap()
+        override fun getBodyContentType(): String {
+            return "multipart/form-data;boundary=$boundary"
     }
 
     @Throws(AuthFailureError::class)
@@ -43,6 +42,12 @@ class MultipartStringRequest(
             e.printStackTrace()
         }
         return bos.toByteArray()
+    }
+
+    override fun getHeaders(): MutableMap<String, String> {
+        val headers = HashMap<String, String>()
+        headers["x-api-key"] = "apikey0"
+        return headers
     }
 
     @Throws(IOException::class)
@@ -72,9 +77,9 @@ class MultipartStringRequest(
         }
     }
 
-    fun setAuthorization(headersParams : Map<String, String>) {
-        this.textParams = "x-api-key", apiKey;
-    }
+//    fun setAuthorization(headersParams : Map<String, String>) {
+//        this.headersParams = headersParams
+//    }
 
     fun setTextParams(textParams: Map<String, String>) {
         this.textParams = textParams

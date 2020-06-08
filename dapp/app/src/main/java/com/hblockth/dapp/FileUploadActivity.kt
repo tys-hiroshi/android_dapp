@@ -11,6 +11,10 @@ import com.android.volley.Response
 import com.android.volley.toolbox.Volley
 import com.hblockth.dapp.requests.MultipartStringRequest
 import com.hblockth.dapp.utils.Utils
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import java.io.IOException
 
 
@@ -86,7 +90,36 @@ class FileUploadActivity : AppCompatActivity() {
                 //TODO: file upload
                 //https://cpoint-lab.co.jp/article/201812/6921/
                 var filePath = getRealPathFromURI(uri)
-                uploadImage(privateKeyWif, filePath as String)
+                //uploadImage(privateKeyWif, filePath as String)
+                val client: OkHttpClient = OkHttpClient().newBuilder().build()
+                val mediaType: MediaType? = "text/plain; charset=utf-8".toMediaTypeOrNull();
+                val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
+                //https://github.com/esafirm/android-salesapp/blob/96a6060dce5dcc501582658921390a160e7b489d/app/src/main/kotlin/com/arx/android/salesapp/data/model/place/PlacePostParameter.kt
+                var multipartBody = builder.addFormDataPart("privatekey_wif", "privatekey_wif")
+                    .addFormDataPart(
+                        "file", filePath,
+                        File(filePath)
+                            .asRequestBody("application/octet-stream".toMediaTypeOrNull())
+                    ).build()
+//                val body: RequestBody = Request.Builder()
+//                    .
+//                    .method("POST", requestBody)
+//                    .addFormDataPart("privatekey_wif", "privatekey_wif")
+//                    .addFormDataPart(
+//                        "file", "/C:/Users/Tashiro/Pictures/uniswap.jpg",
+//                        RequestBody.create(
+//                            MediaType.parse("application/octet-stream"),
+//                            File("/C:/Users/Tashiro/Pictures/uniswap.jpg")
+//                        )
+//                    )
+//                    .build()
+                val request: Request = Request.Builder()
+                    .url("https://bnoteapi.herokuapp.com/v1/api/upload")
+                    .method("POST", multipartBody)
+                    .addHeader("x-api-key", "aaaaaaa")
+                    .build()
+                val response = client.newCall(request).execute()
+                println(response.message)
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

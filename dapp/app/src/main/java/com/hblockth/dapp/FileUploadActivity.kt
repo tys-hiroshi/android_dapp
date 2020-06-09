@@ -13,12 +13,15 @@ import com.android.volley.Response
 import com.android.volley.toolbox.Volley
 import com.hblockth.dapp.requests.MultipartStringRequest
 import com.hblockth.dapp.utils.Utils
-import okhttp3.MediaType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 
@@ -45,7 +48,8 @@ class FileUploadActivity : AppCompatActivity() {
         sendButton = findViewById(R.id.sendButton)
         sendButton.setOnClickListener {
             //uploadImage("cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V")
-            uploadImage("cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V", filePath)
+            //uploadImage("cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V", filePath)
+            onParallelGetButtonClick()
         }
     }
 
@@ -76,13 +80,15 @@ class FileUploadActivity : AppCompatActivity() {
         //uploadImage(privateKeyWif, filePath as String)
         val client: OkHttpClient = OkHttpClient().newBuilder().build()
         val mediaType: MediaType? = "text/plain; charset=utf-8".toMediaTypeOrNull();
-        val builder = MultipartBody.Builder().setType(MultipartBody.FORM)
+        val builder = MultipartBody.Builder()
         //https://github.com/esafirm/android-salesapp/blob/96a6060dce5dcc501582658921390a160e7b489d/app/src/main/kotlin/com/arx/android/salesapp/data/model/place/PlacePostParameter.kt
-        var multipartBody = builder.addFormDataPart("privatekey_wif", "privatekey_wif")
-            .addFormDataPart(
-                "file", filePath,
-                File(filePath)
-                    .asRequestBody("application/octet-stream".toMediaTypeOrNull())
+        var file = File(filePath)
+        var multipartBody = builder.setType(MultipartBody.FORM)
+                .addFormDataPart("privatekey_wif", "cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V")
+                .addFormDataPart(
+                    "file", "image.jpeg",
+                    RequestBody.create(
+                        "multipart/form-data".toMediaTypeOrNull(), file)
             ).build()
     //                val body: RequestBody = Request.Builder()
     //                    .
@@ -105,6 +111,42 @@ class FileUploadActivity : AppCompatActivity() {
         println(response.message)
         // override if necessary
     }
+
+    //非同期処理でHTTP GETを実行します。
+    fun onParallelGetButtonClick() = GlobalScope.launch(Dispatchers.Main) {
+        val privatekey_wif = "cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V"
+        //Mainスレッドでネットワーク関連処理を実行するとエラーになるためBackgroundで実行
+        async(Dispatchers.Default) { uploadImage(privatekey_wif, filePath) }.await().let {
+            //minimal-jsonを使って　jsonをパース
+            //val result = Json.parse(it).asObject()
+            println(it)
+        }
+    }
+
+    fun post_upload_text(): String?{
+        val url = "https://bnoteapi.herokuapp.com/v1/api/upload_text"
+        val client: OkHttpClient = OkHttpClient.Builder().build()
+
+        // create json
+        val json = JSONObject()
+        json.put("message", "message uploadtext")
+        json.put("mnemonic_words", "avoid lady purchase crane hurdle section tobacco gossip harbor liquid dice hole")
+
+        // post
+        //val postBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+        val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
+        val postBody = json.toString().toRequestBody(mediaType)
+        val request: Request = Request.Builder().url(url)
+            .addHeader("x-api-key", "aaaaaaa").post(postBody).build()
+        //From what I see on your error log (in your comment), it is the well known "network on main thread" exception. It happens because Android prevents networking operations (i.e. your HTTP connection) on Main Thread.
+        val response = client.newCall(request).execute()
+
+        // getResult
+        val result: String? = response.body?.string()
+        response.close()
+        return result
+    }
+
 //    @Throws(IOException::class)
 //    private fun uploadImage(privateKeyWif: String, imageUri: String){
 //        val request = MultipartStringRequest(

@@ -1,18 +1,14 @@
 package com.hblockth.dapp
 
-import android.R.attr
 import android.app.Activity
-import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.android.volley.Response
-import com.android.volley.toolbox.Volley
-import com.hblockth.dapp.requests.MultipartStringRequest
-import com.hblockth.dapp.utils.Utils
+import com.beust.klaxon.Klaxon
+import com.hblockth.dapp.model.ResponseBnoteApiUpload
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -23,7 +19,6 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.File
-import java.io.IOException
 
 
 class FileUploadActivity : AppCompatActivity() {
@@ -72,8 +67,8 @@ class FileUploadActivity : AppCompatActivity() {
 //            }
 //        })
 //    }
-    private fun uploadImage(privateKeyWif: String, filePath: String) {
 
+    private fun uploadImage(privateKeyWif: String, filePath: String): String?{
         //TODO: file upload
         //https://cpoint-lab.co.jp/article/201812/6921/
         //var filePath = getRealPathFromURI(uri)
@@ -87,8 +82,7 @@ class FileUploadActivity : AppCompatActivity() {
                 .addFormDataPart("privatekey_wif", "cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V")
                 .addFormDataPart(
                     "file", "image.jpeg",
-                    RequestBody.create(
-                        "multipart/form-data".toMediaTypeOrNull(), file)
+                    file.asRequestBody("application/octet-stream".toMediaTypeOrNull())
             ).build()
     //                val body: RequestBody = Request.Builder()
     //                    .
@@ -108,17 +102,25 @@ class FileUploadActivity : AppCompatActivity() {
             .addHeader("x-api-key", "aaaaaaa")
             .build()
         val response = client.newCall(request).execute()
-        println(response.message)
-        // override if necessary
+
+        val result: String? = response.body?.string()
+        response.close()
+        return result
     }
 
     //非同期処理でHTTP GETを実行します。
     fun onParallelGetButtonClick() = GlobalScope.launch(Dispatchers.Main) {
         val privatekey_wif = "cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V"
         //Mainスレッドでネットワーク関連処理を実行するとエラーになるためBackgroundで実行
-        async(Dispatchers.Default) { uploadImage(privatekey_wif, filePath) }.await().let {
+        async(Dispatchers.Default) {
+            uploadImage(privatekey_wif, filePath)
+            //post_upload_text()
+        }.await().let {
             //minimal-jsonを使って　jsonをパース
-            //val result = Json.parse(it).asObject()
+//            val result = Klaxon()
+//                .parse<ResponseBnoteApiUploadText>(it as String)
+            val result = Klaxon()
+                .parse<ResponseBnoteApiUpload>(it as String)
             println(it)
         }
     }
@@ -129,15 +131,16 @@ class FileUploadActivity : AppCompatActivity() {
 
         // create json
         val json = JSONObject()
-        json.put("message", "message uploadtext")
+        json.put("message", "uploadtext")
         json.put("mnemonic_words", "avoid lady purchase crane hurdle section tobacco gossip harbor liquid dice hole")
 
         // post
         //val postBody = json.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-        val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
+        val mediaType = "application/json".toMediaTypeOrNull()
         val postBody = json.toString().toRequestBody(mediaType)
         val request: Request = Request.Builder().url(url)
-            .addHeader("x-api-key", "aaaaaaa").post(postBody).build()
+            .addHeader("x-api-key", "aaaaaaa")
+            .addHeader("Content-Type", "application/json").post(postBody).build()
         //From what I see on your error log (in your comment), it is the well known "network on main thread" exception. It happens because Android prevents networking operations (i.e. your HTTP connection) on Main Thread.
         val response = client.newCall(request).execute()
 

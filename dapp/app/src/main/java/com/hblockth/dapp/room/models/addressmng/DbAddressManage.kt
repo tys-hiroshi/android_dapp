@@ -22,3 +22,13 @@ data class AddressModel(
     var mnemonic: String,
     var createdAt: Date
 )
+
+
+//upload txid
+@Entity(tableName = "uploadtxids")
+data class UploadTxIdModel(
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    var address: String,
+    var txid: String,
+    var createdAt: Date
+)

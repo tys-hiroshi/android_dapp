@@ -7,8 +7,12 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import com.beust.klaxon.Klaxon
 import com.hblockth.dapp.model.ResponseBnoteApiUpload
+import com.hblockth.dapp.viewmodels.AddAddressViewModel
+import com.hblockth.dapp.viewmodels.DefaultAddressViewModel
+import com.hblockth.dapp.viewmodels.UploadTxIdViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -27,6 +31,8 @@ class FileUploadActivity : AppCompatActivity() {
     private var imageData: ByteArray? = null
     private val postURL: String = "https://ptsv2.com/t/54odo-1576291398/post" // remember to use your own api
 
+    private lateinit var mViewModel: UploadTxIdViewModel
+
     companion object {
         private const val IMAGE_PICK_CODE = 999
     }
@@ -34,6 +40,7 @@ class FileUploadActivity : AppCompatActivity() {
     private var filePath: String = ""
     //https://medium.com/better-programming/how-to-upload-an-image-file-to-your-server-using-volley-in-kotlin-a-step-by-step-tutorial-23f3c0603ec2
     override fun onCreate(savedInstanceState: Bundle?) {
+        mViewModel = ViewModelProviders.of(this).get(UploadTxIdViewModel::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_file_upload)
         imageButton = findViewById(R.id.imageButton)
@@ -110,7 +117,7 @@ class FileUploadActivity : AppCompatActivity() {
 
     //非同期処理でHTTP GETを実行します。
     fun onParallelGetButtonClick() = GlobalScope.launch(Dispatchers.Main) {
-        val privatekey_wif = "cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V"
+        val privatekey_wif = "cTV5h5usU35gHGhySwZ6tbgZUe5wWx2zWywaesebUvaXG9EM4cYc"
         //Mainスレッドでネットワーク関連処理を実行するとエラーになるためBackgroundで実行
         async(Dispatchers.Default) {
             uploadImage(privatekey_wif, filePath)
@@ -122,6 +129,12 @@ class FileUploadActivity : AppCompatActivity() {
             val result = Klaxon()
                 .parse<ResponseBnoteApiUpload>(it as String)
             println(it)
+            //insert to db
+            if(result?.code !== 0){
+                throw IllegalArgumentException("result.code is not 0.")
+            }
+            mViewModel.newUploadTxIdInsert("miXpsTN494gWcv9Epr3KYfLWuQdzDAbNai", result?.txid)
+
         }
     }
 

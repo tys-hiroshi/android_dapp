@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.hblockth.dapp.room.models.addressmng.AddressModel
 import com.hblockth.dapp.room.models.addressmng.DefaultAddressModel
+import com.hblockth.dapp.room.models.addressmng.UploadTxIdModel
 
 @Dao
 interface AddressManageDao {
@@ -25,6 +26,9 @@ interface AddressManageDao {
     @Query("SELECT * FROM defaultaddress LIMIT 1")
     fun findDefaultAddressForLiveData(): LiveData<DefaultAddressModel>
 
+    @Query("SELECT * FROM uploadtxids WHERE address = :address LIMIT 100")
+    fun findUploadTxIdByAddressForLiveData(address: String): LiveData<List<UploadTxIdModel>>
+
 //    @Insert
 //    fun insertAll(vararg addresses: MutableList<AddressModel>)
 
@@ -33,6 +37,9 @@ interface AddressManageDao {
 
     @Insert
     fun insertDefaultAddress(vararg address: DefaultAddressModel)
+
+    @Insert
+    fun insertUploadTxId(vararg uploadTxId: UploadTxIdModel)
 
     @Update
     suspend fun updateDefaultAddress(vararg address: DefaultAddressModel)

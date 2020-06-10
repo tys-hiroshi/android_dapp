@@ -1,5 +1,6 @@
 package com.hblockth.dapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -10,7 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hblockth.dapp.adapter.AddressViewAdapter
 import com.hblockth.dapp.adapter.DownloadListViewAdapter
 import com.hblockth.dapp.databinding.ActivityDownloadListBinding
+import com.hblockth.dapp.utils.Utils
 import com.hblockth.dapp.viewmodels.*
+import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -53,12 +58,20 @@ class FileDownloadListActivity: AppCompatActivity() {
                     // インターフェースの実装
                     mAdapter.setOnItemClickListener(object: DownloadListViewAdapter.OnItemClickListener{
                         override fun onItemClickListener(view: View, position: Int, clickedText: String) {
-                            //changeAddress(clickedText)
-                            println("aaaaaaaa")
+                            showDetailTxId(clickedText)
+                            //println("aaaaaaaa")
                         }
                     })
                 })
             }
         })
+    }
+
+    fun showDetailTxId(txId: String) {
+        val intent: Intent = Intent(this@FileDownloadListActivity,
+            DetailTxIdActivity::class.java)
+
+        intent.putExtra(Utils.SELECTED_TXID, txId)
+        startActivity(intent)
     }
 }

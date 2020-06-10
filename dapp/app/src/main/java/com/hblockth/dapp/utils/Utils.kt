@@ -8,6 +8,7 @@ import java.util.*
 object Utils {
     const val DATABASE_NAME = "database-dapp"
     const val SELECTED_ADDRESS = "com.hblockth.dapp.selected_address"
+    const val SELECTED_TXID = "com.hblockth.dapp.selected_txid"
     const val MAX_RETRIES = 3L
     private const val INITIAL_BACKOFF = 2000L
 
@@ -19,6 +20,7 @@ object Utils {
     private const val BNOTEAPI_BASEURL = "https://bnoteapi.herokuapp.com/v1"
     //ref http://bnoteapi.herokuapp.com/v1/ui/#/
     const val BNOTEAPI_API_UPLOAD = "${BNOTEAPI_BASEURL}/api/upload"
+    const val BNOTEAPI_API_DOWNLOAD = "${BNOTEAPI_BASEURL}/api/download"
 
     private val df = DecimalFormat("###.#")
 

@@ -2,24 +2,18 @@ package com.hblockth.dapp
 
 import android.app.AlertDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.EditText
-import androidx.databinding.DataBindingUtil
+import android.os.Environment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.kittinunf.fuel.gson.responseObject
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
-import com.hblockth.dapp.adapter.DownloadListViewAdapter
 import com.hblockth.dapp.utils.Utils
 import com.hblockth.dapp.viewmodels.DefaultAddressViewModel
-import com.hblockth.dapp.viewmodels.DownloadListViewModel
-import com.hblockth.dapp.viewmodels.DownloadListViewModelFactory
-import java.text.SimpleDateFormat
-import java.util.*
-import androidx.lifecycle.Observer
+import java.io.DataInputStream
+import java.io.File
+import java.io.FileInputStream
 
 class DetailTxIdActivity : AppCompatActivity() {
     private lateinit var mDefaultAddressViewModel: DefaultAddressViewModel
@@ -44,9 +38,17 @@ class DetailTxIdActivity : AppCompatActivity() {
     }
 
     fun download(txId: String){
-        val httpAsync = Utils.BNOTEAPI_API_DOWNLOAD
+        //txid: 03111ca5e2570904b8c81a982aa491494ce8621b0fd9bbb1e2afe6e2791ca1c7
+        val txId = "03111ca5e2570904b8c81a982aa491494ce8621b0fd9bbb1e2afe6e2791ca1c7"
+//        Fuel.download("http://httpbin.org/bytes/32768")
+//            .header(mapOf("x-api-key" to "apikey0"))
+//            .destination { response, url ->
+//                File.createTempFile("temp", ".tmp")
+//            }
+        val httpAsync = "${Utils.BNOTEAPI_API_DOWNLOAD}/${txId}"
             .httpGet()
-            .responseObject<String> { request, response, result ->
+            .header("x-api-key", "apikey0")
+            .response() { request, response, result ->
                 when (result) {
                     is Result.Failure -> {
                         val ex = result.getException()
@@ -64,6 +66,12 @@ class DetailTxIdActivity : AppCompatActivity() {
                     }
                     is Result.Success -> {
                         val(data, err) = result
+                        var outputFilename = "${Environment.getExternalStorageDirectory()}/Download/download.jpg"
+                        File(outputFilename).writeBytes(data as ByteArray)
+//                        val file = File("download.jpg")
+//                        val dis = DataInputStream(FileInputStream(file))
+//                        dis.readFully(data)
+//                        dis.close()
                         println("data:${data}")
                     }
                 }

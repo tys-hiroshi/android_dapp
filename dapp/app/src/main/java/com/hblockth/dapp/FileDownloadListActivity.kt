@@ -42,16 +42,14 @@ class FileDownloadListActivity: AppCompatActivity() {
                     val date = SimpleDateFormat("yyyy/MM/dd").format(Date())
 
 
-                    mBinding = DataBindingUtil.setContentView(this, R.layout.activity_address_list)
+                    mBinding = DataBindingUtil.setContentView(this, R.layout.activity_download_list)
                     mBinding.viewModel = mDownloadListViewModel
                     mBinding.txidRecyclerView.apply {
                         adapter = mAdapter
                         layoutManager = LinearLayoutManager(this@FileDownloadListActivity)
                     }
-                    mDownloadListViewModel.uploadTxIdModel.observe(this, Observer { uploadTxIdList ->
-                        mAdapter.txIdList = uploadTxIdList
-                        mAdapter.notifyDataSetChanged()
-                    })
+                    mAdapter.txIdList = uploadTxIdList
+                    mAdapter.notifyDataSetChanged()
                     // インターフェースの実装
                     mAdapter.setOnItemClickListener(object: DownloadListViewAdapter.OnItemClickListener{
                         override fun onItemClickListener(view: View, position: Int, clickedText: String) {

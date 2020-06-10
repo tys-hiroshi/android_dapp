@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.hblockth.dapp.R
-import com.hblockth.dapp.room.models.addressmng.AddressModel
 import androidx.databinding.DataBindingUtil
 import com.hblockth.dapp.room.models.addressmng.UploadTxIdModel
 import com.hblockth.dapp.utils.Utils
@@ -20,12 +19,12 @@ class DownloadListViewAdapter(var txIdList: List<UploadTxIdModel>) :
     lateinit var listener: OnItemClickListener
 
     class TxIdViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val dateTextView: TextView = view.findViewById(R.id.date)
+        val dateTextView: TextView = view.findViewById(R.id.txidinsertdate)
         val txIdTextView: TextView = view.findViewById(R.id.txid)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TxIdViewHolder =
-        TxIdViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_address, parent, false))
+        TxIdViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_txid, parent, false))
 
 
     override fun getItemCount(): Int = txIdList.size

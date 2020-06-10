@@ -60,6 +60,12 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun viewDownloadList(view: View) {
+        val intent: Intent = Intent(this@MainActivity,
+            FileDownloadListActivity::class.java)
+        startActivity(intent)
+    }
+
     fun setAddressInfo(address: String?){
         mViewModel = ViewModelProviders.of(this, AddressViewModelFactory(this.application, address as String))
             .get<AddressViewModel>(

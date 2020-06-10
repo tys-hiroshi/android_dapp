@@ -13,22 +13,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class UploadTxIdViewModelFactory(private val mApplication: Application, private val mParam: String) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return UploadTxIdViewModel(mApplication, mParam) as T
-    }
-}
+//class UploadTxIdViewModelFactory(private val mApplication: Application, private val mParam: String) :
+//    ViewModelProvider.Factory {
+//    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+//        return UploadTxIdViewModel(mApplication, mParam) as T
+//    }
+//}
 
-class UploadTxIdViewModel(application: Application, mParam: String) : AndroidViewModel(application) {
-    val uploadTxIdModel: LiveData<List<UploadTxIdModel>>
+class UploadTxIdViewModel(application: Application) : AndroidViewModel(application) {
+    //val uploadTxIdModel: LiveData<List<UploadTxIdModel>>
     val repository: UploadTxIdRepository
 
     init {
         repository = UploadTxIdRepository(
             AppDatabase.getDatabase(application, viewModelScope).getAddressManageDao()
         )
-        uploadTxIdModel = repository.findUploadTxIdForLiveData(mParam)
+        //uploadTxIdModel = repository.findUploadTxIdForLiveData(mParam)
     }
 
     //DBへレコード追加

@@ -6,13 +6,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.beust.klaxon.Klaxon
 import com.hblockth.dapp.model.ResponseBnoteApiUpload
-import com.hblockth.dapp.viewmodels.AddAddressViewModel
-import com.hblockth.dapp.viewmodels.DefaultAddressViewModel
-import com.hblockth.dapp.viewmodels.UploadTxIdViewModel
+import com.hblockth.dapp.room.models.addressmng.UploadTxIdModel
+import com.hblockth.dapp.viewmodels.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -29,9 +30,10 @@ class FileUploadActivity : AppCompatActivity() {
     private lateinit var imageButton: Button
     private lateinit var sendButton: Button
     private var imageData: ByteArray? = null
-    private val postURL: String = "https://ptsv2.com/t/54odo-1576291398/post" // remember to use your own api
 
-    private lateinit var mViewModel: UploadTxIdViewModel
+    private lateinit var mUploadTxIdViewModel: UploadTxIdViewModel
+    private lateinit var mDefaultAddressViewModel: DefaultAddressViewModel
+    private lateinit var mAddressViewModel: AddressViewModel
 
     companion object {
         private const val IMAGE_PICK_CODE = 999
@@ -40,7 +42,12 @@ class FileUploadActivity : AppCompatActivity() {
     private var filePath: String = ""
     //https://medium.com/better-programming/how-to-upload-an-image-file-to-your-server-using-volley-in-kotlin-a-step-by-step-tutorial-23f3c0603ec2
     override fun onCreate(savedInstanceState: Bundle?) {
-        mViewModel = ViewModelProviders.of(this).get(UploadTxIdViewModel::class.java)
+        mUploadTxIdViewModel = ViewModelProviders.of(this).get(UploadTxIdViewModel::class.java)
+//        mAddressViewModel =  ViewModelProviders.of(this, AddressViewModelFactory(this.application, ""))
+//            .get<AddressViewModel>(
+//                AddressViewModel::class.java
+//            )
+        mDefaultAddressViewModel =  ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_file_upload)
         imageButton = findViewById(R.id.imageButton)
@@ -51,7 +58,7 @@ class FileUploadActivity : AppCompatActivity() {
         sendButton.setOnClickListener {
             //uploadImage("cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V")
             //uploadImage("cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V", filePath)
-            onParallelGetButtonClick()
+            doUploadForDefaultAddressInfo()
         }
     }
 
@@ -86,23 +93,12 @@ class FileUploadActivity : AppCompatActivity() {
         //https://github.com/esafirm/android-salesapp/blob/96a6060dce5dcc501582658921390a160e7b489d/app/src/main/kotlin/com/arx/android/salesapp/data/model/place/PlacePostParameter.kt
         var file = File(filePath)
         var multipartBody = builder.setType(MultipartBody.FORM)
-                .addFormDataPart("privatekey_wif", "cP18Z8qwwjW8qTwSGTyhYuhUt6jmfPUfEowmhb8ymHx5URrVZx9V")
+                .addFormDataPart("privatekey_wif", privateKeyWif)
                 .addFormDataPart(
                     "file", "image.jpeg",
                     file.asRequestBody("application/octet-stream".toMediaTypeOrNull())
             ).build()
-    //                val body: RequestBody = Request.Builder()
-    //                    .
-    //                    .method("POST", requestBody)
-    //                    .addFormDataPart("privatekey_wif", "privatekey_wif")
-    //                    .addFormDataPart(
-    //                        "file", "/C:/Users/Tashiro/Pictures/uniswap.jpg",
-    //                        RequestBody.create(
-    //                            MediaType.parse("application/octet-stream"),
-    //                            File("/C:/Users/Tashiro/Pictures/uniswap.jpg")
-    //                        )
-    //                    )
-    //                    .build()
+
         val request: Request = Request.Builder()
             .url("https://bnoteapi.herokuapp.com/v1/api/upload")
             .method("POST", multipartBody)
@@ -115,17 +111,34 @@ class FileUploadActivity : AppCompatActivity() {
         return result
     }
 
+    fun doUploadForDefaultAddressInfo() {
+        mDefaultAddressViewModel = ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
+        //mDefaultAddressViewModel =  ViewModelProvider.NewInstanceFactory().create(DefaultAddressViewModel::class.java)
+        //print(mViewModel.addressModel)
+        mDefaultAddressViewModel.addressModel.observe(this, Observer { defaultaddressInfo ->
+            if(defaultaddressInfo != null)
+            {
+                mAddressViewModel = ViewModelProviders.of(this, AddressViewModelFactory(this.application, defaultaddressInfo.address as String))
+                    .get<AddressViewModel>(
+                        AddressViewModel::class.java
+                    )
+                mAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
+                    if(addressInfo != null)
+                    {
+                        onParallelGetButtonClick(addressInfo.address, addressInfo.privateKeyWif)
+                    }
+                })
+            }
+        })
+    }
+
     //非同期処理でHTTP GETを実行します。
-    fun onParallelGetButtonClick() = GlobalScope.launch(Dispatchers.Main) {
-        val privatekey_wif = "cTV5h5usU35gHGhySwZ6tbgZUe5wWx2zWywaesebUvaXG9EM4cYc"
+    fun onParallelGetButtonClick(address: String, privatekey_wif: String) = GlobalScope.launch(Dispatchers.Main) {
         //Mainスレッドでネットワーク関連処理を実行するとエラーになるためBackgroundで実行
         async(Dispatchers.Default) {
             uploadImage(privatekey_wif, filePath)
             //post_upload_text()
         }.await().let {
-            //minimal-jsonを使って　jsonをパース
-//            val result = Klaxon()
-//                .parse<ResponseBnoteApiUploadText>(it as String)
             val result = Klaxon()
                 .parse<ResponseBnoteApiUpload>(it as String)
             println(it)
@@ -133,8 +146,7 @@ class FileUploadActivity : AppCompatActivity() {
             if(result?.code !== 0){
                 throw IllegalArgumentException("result.code is not 0.")
             }
-            mViewModel.newUploadTxIdInsert("miXpsTN494gWcv9Epr3KYfLWuQdzDAbNai", result?.txid)
-
+            mUploadTxIdViewModel.newUploadTxIdInsert(address, result?.txid)
         }
     }
 

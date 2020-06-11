@@ -27,28 +27,35 @@ class AddAddressActivity : AppCompatActivity() {
         buttonAddAddressInfo = findViewById(R.id.buttonAddAddressInfo)
         buttonAddAddressInfo.setOnClickListener {
             onParallelClickAddButton()
+            mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
+                if(addressInfo == null)
+                {
+                    var textInputEditTextAddress: TextView = findViewById(R.id.textInputEditTextAddress) as TextView
+                    val address = textInputEditTextAddress.text
+                    mDefaultAddressViewModel.newDefaultAddressInsert(address as String)
+                }
+            })
         }
     }
     fun onParallelClickAddButton() = GlobalScope.launch(
         Dispatchers.Main) {
         //Mainスレッドでネットワーク関連処理を実行するとエラーになるためBackgroundで実行
         async(Dispatchers.Default) {
-            clickAddButton()
+            var textInputEditTextAddress: TextView = findViewById(R.id.textInputEditTextAddress) as TextView
+            val address = textInputEditTextAddress.text
+            var textInputEditTextPrivateKeyWif: TextView = findViewById(R.id.textInputEditTextPrivateKeyWif) as TextView
+            val privateKeyWif = textInputEditTextPrivateKeyWif.text
+            var textInputEditTextMnemonic: TextView = findViewById(R.id.editTextTextMultiLineMnemonic) as TextView
+            val mnemonic = textInputEditTextMnemonic.text
+            clickAddButton(address as String, privateKeyWif as String, mnemonic as String)
         }.await().let {
-
         }
     }
-    fun clickAddButton(){
+    fun clickAddButton(address: String, privateKeyWif: String, mnemonic:String){
         //var textInputEditTextAddress: TextView = findViewById(R.id.textInputEditTextAddress) as TextView
-//        var textInputEditTextAddress: TextView = findViewById(R.id.textInputEditTextAddress) as TextView
-//        val address = textInputEditTextAddress.text
-//        var textInputEditTextPrivateKeyWif: TextView = findViewById(R.id.textInputEditTextPrivateKeyWif) as TextView
-//        val privateKeyWif = textInputEditTextPrivateKeyWif.text
-//        var textInputEditTextMnemonic: TextView = findViewById(R.id.editTextTextMultiLineMnemonic) as TextView
-//        val mnemonic = textInputEditTextMnemonic.text
-        val address = "msXVAaciVB43mH6hd9ceDSQYkDZPAtVxMu"
-        val privateKeyWif = "cTS3iAaeY4ipUUmKtTdD9K4MHMoTfpWbkFW7eMPtpCtdBZByXqiq"
-        val mnemonic = "series evoke lawn shine walnut share curve street angle runway eager valve"
+//        val address = "msXVAaciVB43mH6hd9ceDSQYkDZPAtVxMu"
+//        val privateKeyWif = "cTS3iAaeY4ipUUmKtTdD9K4MHMoTfpWbkFW7eMPtpCtdBZByXqiq"
+//        val mnemonic = "series evoke lawn shine walnut share curve street angle runway eager valve"
         mAddAddressViewModel.newAddressInsert(address as String, privateKeyWif as String, mnemonic as String)
         //TODO: 新しいAddressを生成するときにdefaultaddress テーブルに追加する。既にレコードがある場合は、何もしない。
 //        mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->

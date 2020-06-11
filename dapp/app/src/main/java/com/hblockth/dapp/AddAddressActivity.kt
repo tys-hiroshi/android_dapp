@@ -55,18 +55,6 @@ class AddAddressActivity : AppCompatActivity() {
     }
 
     fun clickAddButton(address: String, privateKeyWif: String, mnemonic:String){
-        //var textInputEditTextAddress: TextView = findViewById(R.id.textInputEditTextAddress) as TextView
-        val address = "msXVAaciVB43mH6hd9ceDSQYkDZPAtVxMu"
-        val privateKeyWif = "cTS3iAaeY4ipUUmKtTdD9K4MHMoTfpWbkFW7eMPtpCtdBZByXqiq"
-        val mnemonic = "series evoke lawn shine walnut share curve street angle runway eager valve"
-        mAddAddressViewModel.newAddressInsert(address as String, privateKeyWif as String, mnemonic as String)
-        //mDefaultAddressViewModel =  ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
-        //TODO: 新しいAddressを生成するときにdefaultaddress テーブルに追加する。既にレコードがある場合は、何もしない。
-//        mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
-//            if(addressInfo == null)
-//            {
-//                mDefaultAddressViewModel.newDefaultAddressInsert(address as String)
-//            }
-//        })
+        mAddAddressViewModel.newAddressInsert(address, privateKeyWif, mnemonic)
     }
 }

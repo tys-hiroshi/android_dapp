@@ -66,6 +66,12 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun viewAddAddress(view: View) {
+        val intent: Intent = Intent(this@MainActivity,
+            AddAddressActivity::class.java)
+        startActivity(intent)
+    }
+
     fun setAddressInfo(address: String?){
         mViewModel = ViewModelProviders.of(this, AddressViewModelFactory(this.application, address as String))
             .get<AddressViewModel>(

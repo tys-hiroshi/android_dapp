@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DetailTxIdActivity"></activity>
+        <activity android:name=".AddAddressActivity" />
+        <activity android:name=".DetailTxIdActivity" />
         <activity android:name=".FileUploadActivity" />
         <activity android:name=".FileDownloadListActivity" />
         <activity android:name=".AddressListActivity" />

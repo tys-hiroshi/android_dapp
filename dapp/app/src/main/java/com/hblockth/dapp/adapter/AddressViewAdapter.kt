@@ -1,15 +1,12 @@
 package com.hblockth.dapp.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.hblockth.dapp.R
 import com.hblockth.dapp.room.models.addressmng.AddressModel
-import androidx.databinding.DataBindingUtil
 import com.hblockth.dapp.utils.Utils
 
 class AddressViewAdapter(var addressList: List<AddressModel>) :
@@ -20,7 +17,8 @@ class AddressViewAdapter(var addressList: List<AddressModel>) :
 
     class AddressViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val dateTextView: TextView = view.findViewById(R.id.date)
-        val addressTextView: TextView = view.findViewById(R.id.address)
+        val addressTextView: TextView = view.findViewById(R.id.TextViewAddressInAddressList)
+        val buttonRemoveAddressInfo: TextView = view.findViewById(R.id.buttonRemoveAddressInfo)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressViewHolder =
@@ -35,6 +33,10 @@ class AddressViewAdapter(var addressList: List<AddressModel>) :
         holder.dateTextView.text = Utils.dateTimeFormatter.format(addressList[position].createdAt)
         // タップしたとき
         holder.addressTextView.setOnClickListener {
+            listener.onItemClickListener(it, position, addressList[position].address)
+        }
+        // button をタップしたとき
+        holder.buttonRemoveAddressInfo.setOnClickListener {
             listener.onItemClickListener(it, position, addressList[position].address)
         }
     }

@@ -16,8 +16,6 @@ import com.hblockth.dapp.viewmodels.DefaultAddressViewModel
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 //import com.hblockth.dapp.databinding.ActivityAddressListBinding
@@ -55,10 +53,32 @@ class AddressListActivity : AppCompatActivity() {
 //            recyclerView.layoutManager = LinearLayoutManager(this)
 //        }
 
-        // インターフェースの実装
+//        // インターフェースの実装
+//        mAdapter.setOnItemClickListener(object:AddressViewAdapter.OnItemClickListener{
+//            override fun onItemClickListener(view: View, position: Int, clickedText: String) {
+//
+//                changeAddress(clickedText)
+////                when(view.id){
+////                    R.id.TextViewAddressInAddressList -> {
+////                        changeAddress(clickedText)
+////                    }
+////                    R.id.buttonRemoveAddressInfo -> {
+////                        removeAddressInfo(clickedText)
+////                    }
+////                }
+//            }
+//        })
+
         mAdapter.setOnItemClickListener(object:AddressViewAdapter.OnItemClickListener{
             override fun onItemClickListener(view: View, position: Int, clickedText: String) {
-                changeAddress(clickedText)
+                when(view.id){
+                    R.id.TextViewAddressInAddressList -> {
+                        changeAddress(clickedText)
+                    }
+                    R.id.buttonRemoveAddressInfo -> {
+                        removeAddressInfo(clickedText)
+                    }
+                }
             }
         })
     }
@@ -104,5 +124,6 @@ class AddressListActivity : AppCompatActivity() {
 //            }
 //        })
         mAddressListViewModel.deleteAddress(address)
+        startActivity(intent)
     }
 }

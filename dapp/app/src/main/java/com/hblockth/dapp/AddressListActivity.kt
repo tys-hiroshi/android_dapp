@@ -1,8 +1,10 @@
 package com.hblockth.dapp
 
+import android.R
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -16,15 +18,13 @@ import com.hblockth.dapp.viewmodels.DefaultAddressViewModel
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 //import com.hblockth.dapp.databinding.ActivityAddressListBinding
 
 class AddressListActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityAddressListBinding
-    private lateinit var mViewModel: AddressListViewModel
+    private lateinit var mAddressListViewModel: AddressListViewModel
     private lateinit var mDefaultAddressViewModel: DefaultAddressViewModel
     private lateinit var mAdapter: AddressViewAdapter
     private var hasScrolledSteep = false
@@ -32,24 +32,18 @@ class AddressListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_address_list)
-//        val binding : ActivityAddressListBinding =
-//            DataBindingUtil.setContentView(this, R.layout.activity_address_list)
 
-        mViewModel = ViewModelProviders.of(this).get(AddressListViewModel::class.java)
+        mAddressListViewModel = ViewModelProviders.of(this).get(AddressListViewModel::class.java)
         mDefaultAddressViewModel =  ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
         mAdapter = AddressViewAdapter(emptyList())
-        //テストデータの生成
         //https://qiita.com/fu_neko/items/722e0ab5f0f1255f87bf
-        val date = SimpleDateFormat("yyyy/MM/dd").format(Date())
-
-
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_address_list)
-        mBinding.viewModel = mViewModel
+        mBinding.viewModel = mAddressListViewModel
         mBinding.addressRecyclerView.apply {
             adapter = mAdapter
             layoutManager = LinearLayoutManager(this@AddressListActivity)
         }
-        mViewModel.addresses.observe(this, Observer { addressList ->
+        mAddressListViewModel.addresses.observe(this, Observer { addressList ->
             mAdapter.addressList = addressList
             mAdapter.notifyDataSetChanged()
             hasScrolledSteep = true
@@ -64,7 +58,14 @@ class AddressListActivity : AppCompatActivity() {
         // インターフェースの実装
         mAdapter.setOnItemClickListener(object:AddressViewAdapter.OnItemClickListener{
             override fun onItemClickListener(view: View, position: Int, clickedText: String) {
-                changeAddress(clickedText)
+                //changeAddress(clickedText)
+                //https://qiita.com/meru_h/items/f4006016733968e398af
+                //https://qiita.com/satodayo/items/366b0650eee709b8e0cb
+//                when (view.id) {
+//                    R.id.text1 ->{}
+//
+//                    R.id.button1 -> {}
+//                }
             }
         })
     }
@@ -91,5 +92,24 @@ class AddressListActivity : AppCompatActivity() {
         })
         intent.putExtra(Utils.SELECTED_ADDRESS, address)
         startActivity(intent)
+    }
+
+
+    /* Sendボタン押下時 */
+    fun removeAddressInfo(address: String) {
+        val intent: Intent = Intent(this@AddressListActivity,
+            MainActivity::class.java)
+        //TODO: 削除されたAddressがDefault Address なら更新する
+//        mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
+//            if(addressInfo != null)
+//            {
+//                Completable.fromAction { mDefaultAddressViewModel.defaultAddressDelete(address as String) }
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribeOn(Schedulers.single())
+//                    .subscribe()
+//
+//            }
+//        })
+        mAddressListViewModel.deleteAddress(address)
     }
 }

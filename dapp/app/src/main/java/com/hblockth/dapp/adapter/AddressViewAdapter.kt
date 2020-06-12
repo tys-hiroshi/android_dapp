@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,7 @@ class AddressViewAdapter(var addressList: List<AddressModel>) :
     class AddressViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val dateTextView: TextView = view.findViewById(R.id.date)
         val addressTextView: TextView = view.findViewById(R.id.address)
+        val buttonRemoveAddressInfo: Button = view.findViewById(R.id.buttonRemoveAddressInfo)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressViewHolder =
@@ -37,6 +39,10 @@ class AddressViewAdapter(var addressList: List<AddressModel>) :
         holder.addressTextView.setOnClickListener {
             listener.onItemClickListener(it, position, addressList[position].address)
         }
+        //TODO: Remove Address Info
+        holder.buttonRemoveAddressInfo.setOnClickListener {
+            listener.onItemClickListener(it, position, addressList[position].address)
+        }
     }
 
     //インターフェースの作成
@@ -44,9 +50,19 @@ class AddressViewAdapter(var addressList: List<AddressModel>) :
         fun onItemClickListener(view: View, position: Int, clickedText: String)
     }
 
+//    //インターフェースの作成
+//    interface OnItemDeleteClickListener{
+//        fun onItemDeleteClickListener(view: View, position: Int, clickedText: String)
+//    }
+
     //https://qiita.com/YS-BETA/items/f54bed772d502c5c06f0
     // リスナー
     fun setOnItemClickListener(listener: OnItemClickListener){
         this.listener = listener
     }
+
+//    // リスナー
+//    fun setOnItemDeleteClickListener(listener: OnItemDeleteClickListener){
+//        this.listener = listener
+//    }
 }

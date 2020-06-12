@@ -44,8 +44,8 @@ interface AddressManageDao {
     @Update
     suspend fun updateDefaultAddress(vararg address: DefaultAddressModel)
 
-    @Delete
-    fun delete(address: AddressModel)
+    @Query("DELETE FROM addresses WHERE address = :address")
+    fun delete(address: String)
 
     @Query("DELETE FROM defaultaddress")
     fun deleteDefaultAddressAll()

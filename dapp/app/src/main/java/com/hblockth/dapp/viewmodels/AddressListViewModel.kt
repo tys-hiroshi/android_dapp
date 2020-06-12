@@ -18,10 +18,17 @@ class AddressListViewModel (application: Application) : AndroidViewModel(applica
     val addresses: LiveData<List<AddressModel>>
     val repository: AddressRepository
 
-    var isInserting = false
-
     init {
         repository = AddressRepository(AppDatabase.getDatabase(application, viewModelScope).getAddressManageDao())
         addresses = repository.findAllForLiveData()
+    }
+
+    //DBÇ÷ÉåÉRÅ[Éhí«â¡
+    fun deleteAddress(addressStr: String) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteAddress(addressStr)
+    }
+
+    fun AddressDelete(addressStr: String) {
+        deleteAddress(addressStr)
     }
 }

@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.beust.klaxon.Klaxon
 import com.hblockth.dapp.model.ResponseBnoteApiUpload
 import com.hblockth.dapp.viewmodels.AddAddressViewModel
+import com.hblockth.dapp.viewmodels.AddressViewModel
+import com.hblockth.dapp.viewmodels.AddressViewModelFactory
 import com.hblockth.dapp.viewmodels.DefaultAddressViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -17,6 +19,7 @@ import kotlinx.coroutines.launch
 
 class AddAddressActivity : AppCompatActivity() {
     private lateinit var buttonAddAddressInfo: Button
+    private lateinit var mAddressViewModel: AddressViewModel
     private lateinit var mAddAddressViewModel: AddAddressViewModel
     private lateinit var mDefaultAddressViewModel: DefaultAddressViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +28,19 @@ class AddAddressActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_address)
         buttonAddAddressInfo = findViewById(R.id.buttonAddAddressInfo)
         buttonAddAddressInfo.setOnClickListener {
-            onParallelClickAddButton()
+
+            var textInputEditTextAddress: TextView = findViewById(R.id.textInputEditTextAddress) as TextView
+            val address = textInputEditTextAddress.text.toString()
+            mAddressViewModel = ViewModelProviders.of(this, AddressViewModelFactory(this.application, address as String))
+                .get<AddressViewModel>(
+                    AddressViewModel::class.java
+                )
+            mAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
+                if(addressInfo == null)
+                {
+                    onParallelClickAddButton()
+                }
+            })
 
             mDefaultAddressViewModel =  ViewModelProviders.of(this).get(DefaultAddressViewModel::class.java)
             mDefaultAddressViewModel.addressModel.observe(this, Observer { addressInfo ->
@@ -49,12 +64,13 @@ class AddAddressActivity : AppCompatActivity() {
             val privateKeyWif = textInputEditTextPrivateKeyWif.text.toString()
             var textInputEditTextMnemonic: TextView = findViewById(R.id.editTextTextMultiLineMnemonic) as TextView
             val mnemonic = textInputEditTextMnemonic.text.toString()
-            clickAddButton(address, privateKeyWif, mnemonic)
+
+            doAddAddressInfo(address, privateKeyWif, mnemonic)
         }.await().let {
         }
     }
 
-    fun clickAddButton(address: String, privateKeyWif: String, mnemonic:String){
+    fun doAddAddressInfo(address: String, privateKeyWif: String, mnemonic:String){
         mAddAddressViewModel.newAddressInsert(address, privateKeyWif, mnemonic)
     }
 }

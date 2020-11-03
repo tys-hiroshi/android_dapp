@@ -91,6 +91,7 @@ class FileUploadActivity : AppCompatActivity() {
         val mediaType: MediaType? = "text/plain; charset=utf-8".toMediaTypeOrNull();
         val builder = MultipartBody.Builder()
         //https://github.com/esafirm/android-salesapp/blob/96a6060dce5dcc501582658921390a160e7b489d/app/src/main/kotlin/com/arx/android/salesapp/data/model/place/PlacePostParameter.kt
+        //https://alek3.hatenablog.com/entry/2018/09/29/105207
         var file = File(filePath)
         var multipartBody = builder.setType(MultipartBody.FORM)
                 .addFormDataPart("privatekey_wif", privateKeyWif)

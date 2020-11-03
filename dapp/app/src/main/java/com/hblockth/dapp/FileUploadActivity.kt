@@ -6,20 +6,24 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.beust.klaxon.Klaxon
 import com.hblockth.dapp.model.ResponseBnoteApiUpload
-import com.hblockth.dapp.room.models.addressmng.UploadTxIdModel
-import com.hblockth.dapp.viewmodels.*
+import com.hblockth.dapp.viewmodels.AddressViewModel
+import com.hblockth.dapp.viewmodels.AddressViewModelFactory
+import com.hblockth.dapp.viewmodels.DefaultAddressViewModel
+import com.hblockth.dapp.viewmodels.UploadTxIdViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import okhttp3.*
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
@@ -136,10 +140,10 @@ class FileUploadActivity : AppCompatActivity() {
     //非同期処理でHTTP GETを実行します。
     fun onParallelGetButtonClick(address: String, privatekey_wif: String) = GlobalScope.launch(Dispatchers.Main) {
         //Mainスレッドでネットワーク関連処理を実行するとエラーになるためBackgroundで実行
-        async(Dispatchers.Default) {
+        withContext(Dispatchers.Default) {
             uploadImage(privatekey_wif, filePath)
             //post_upload_text()
-        }.await().let {
+        }.let {
             val result = Klaxon()
                 .parse<ResponseBnoteApiUpload>(it as String)
             println(it)

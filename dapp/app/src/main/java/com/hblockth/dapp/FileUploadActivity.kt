@@ -152,6 +152,10 @@ class FileUploadActivity : AppCompatActivity() {
                 throw IllegalArgumentException("result.code is not 0.")
             }
             mUploadTxIdViewModel.newUploadTxIdInsert(address, result?.txid)
+            //NOTE: Main画面に遷移する
+            val intent: Intent = Intent(this@FileUploadActivity,
+                MainActivity::class.java)
+            startActivity(intent)
         }
     }
 
